@@ -72,22 +72,22 @@ All test tasks MUST be written and confirmed failing before any implementation t
 
 ### Tests for User Story 1 ⚠️ Write first — confirm failing before T032
 
-- [ ] T025 [P] [US1] Write OFX parser unit tests in `test/xactions/sync/ofx_test.exs`: parse checking, credit card, and brokerage OFX fixtures; assert correct transaction counts, amounts, FITIDs, and balance values
-- [ ] T026 [P] [US1] Write CSV parser unit tests in `test/xactions/sync/csv_parser_test.exs`: parse sample CSV with institution column-map config; assert normalized transaction output
-- [ ] T027 [P] [US1] Write `Accounts` context integration tests in `test/xactions/accounts/accounts_test.exs`: create institution (with encrypted credentials), create manual account, list accounts, update institution status transitions
-- [ ] T028 [P] [US1] Write `SyncWorker` integration tests in `test/xactions/sync/sync_worker_test.exs`: use `FakeScraper` to simulate a successful sync, MFA pause, and credential error; assert `SyncLog` entries and account balance updates
+- [x] T025 [P] [US1] Write OFX parser unit tests in `test/xactions/sync/ofx_test.exs`: parse checking, credit card, and brokerage OFX fixtures; assert correct transaction counts, amounts, FITIDs, and balance values
+- [x] T026 [P] [US1] Write CSV parser unit tests in `test/xactions/sync/csv_parser_test.exs`: parse sample CSV with institution column-map config; assert normalized transaction output
+- [x] T027 [P] [US1] Write `Accounts` context integration tests in `test/xactions/accounts/accounts_test.exs`: create institution (with encrypted credentials), create manual account, list accounts, update institution status transitions
+- [x] T028 [P] [US1] Write `SyncWorker` integration tests in `test/xactions/sync/sync_worker_test.exs`: use `FakeScraper` to simulate a successful sync, MFA pause, and credential error; assert `SyncLog` entries and account balance updates
 - [ ] T029 [US1] Write `AccountsLive` and `DashboardLive` LiveView tests in `test/xactions_web/live/accounts_live_test.exs` and `test/xactions_web/live/dashboard_live_test.exs`: add institution form, trigger sync, confirm accounts appear, confirm reconnect alert
 
 ### Implementation for User Story 1
 
-- [ ] T030 [P] [US1] Implement OFX parser in `lib/xactions/sync/ofx.ex`: parse OFX 1.x SGML and 2.x XML; extract `<STMTTRN>`, `<INVPOSLIST>`, `<LEDGERBAL>`; return structured `account_data`, `transaction_data`, `holding_data` maps
-- [ ] T031 [P] [US1] Implement CSV parser in `lib/xactions/sync/csv_parser.ex`: accept institution column-map config + NimbleCSV binary; return normalized `transaction_data` list
-- [ ] T032 [P] [US1] Implement `ScraperBehaviour` in `lib/xactions/sync/scraper_behaviour.ex`: define `@callback sync/2`, `@callback resolve_mfa/2`, `@callback name/0`, `@callback export_format/0`
-- [ ] T033 [P] [US1] Implement `Institution` schema in `lib/xactions/accounts/institution.ex`: Ecto schema with `Cloak.Ecto.Binary` for `credential_username`, `credential_password`, `totp_seed`, `session_cookies`; changeset with validations
-- [ ] T034 [P] [US1] Implement `Account` schema in `lib/xactions/accounts/account.ex`: Ecto schema with type enum, belongs_to institution, changeset
-- [ ] T035 [US1] Implement `Accounts` context in `lib/xactions/accounts/accounts.ex`: `list_institutions/0`, `get_institution!/1`, `create_institution/1`, `update_institution_status/2`, `disconnect_institution/1` (deletes institution + all accounts + all their transactions)
-- [ ] T036 [P] [US1] Implement `SyncLog` schema in `lib/xactions/sync/sync_log.ex`: Ecto schema with status enum, belongs_to institution
-- [ ] T037 [US1] Implement `SyncWorker` in `lib/xactions/sync/sync_worker.ex`: decrypt credentials, launch Playwright browser context, call scraper module, parse OFX/CSV output, upsert accounts + transactions, write SyncLog, broadcast PubSub events (`sync:status`)
+- [x] T030 [P] [US1] Implement OFX parser in `lib/xactions/sync/ofx.ex`: parse OFX 1.x SGML and 2.x XML; extract `<STMTTRN>`, `<INVPOSLIST>`, `<LEDGERBAL>`; return structured `account_data`, `transaction_data`, `holding_data` maps
+- [x] T031 [P] [US1] Implement CSV parser in `lib/xactions/sync/csv_parser.ex`: accept institution column-map config + NimbleCSV binary; return normalized `transaction_data` list
+- [x] T032 [P] [US1] Implement `ScraperBehaviour` in `lib/xactions/sync/scraper_behaviour.ex`: define `@callback sync/2`, `@callback resolve_mfa/2`, `@callback name/0`, `@callback export_format/0`
+- [x] T033 [P] [US1] Implement `Institution` schema in `lib/xactions/accounts/institution.ex`: Ecto schema with `Cloak.Ecto.Binary` for `credential_username`, `credential_password`, `totp_seed`, `session_cookies`; changeset with validations
+- [x] T034 [P] [US1] Implement `Account` schema in `lib/xactions/accounts/account.ex`: Ecto schema with type enum, belongs_to institution, changeset
+- [x] T035 [US1] Implement `Accounts` context in `lib/xactions/accounts/accounts.ex`: `list_institutions/0`, `get_institution!/1`, `create_institution/1`, `update_institution_status/2`, `disconnect_institution/1` (deletes institution + all accounts + all their transactions)
+- [x] T036 [P] [US1] Implement `SyncLog` schema in `lib/xactions/sync/sync_log.ex`: Ecto schema with status enum, belongs_to institution
+- [x] T037 [US1] Implement `SyncWorker` in `lib/xactions/sync/sync_worker.ex`: decrypt credentials, launch Playwright browser context, call scraper module, parse OFX/CSV output, upsert accounts + transactions, write SyncLog, broadcast PubSub events (`sync:status`)
 - [ ] T038 [US1] Implement `SyncScheduler` GenServer in `lib/xactions/sync/sync_scheduler.ex`: supervised, schedules per-institution syncs via `Process.send_after`; handles `{:sync_now, institution_id}` and `{:sync_all}` messages; manual trigger callable from LiveView
 - [ ] T039 [US1] Implement `MFACoordinator` GenServer in `lib/xactions/sync/mfa_coordinator.ex`: pauses a SyncWorker awaiting an MFA code; accepts `resolve_mfa/2` call from MfaLive; times out after 5 minutes with `:mfa_timeout` error
 - [ ] T040 [US1] Add `ConnectorSupervisor` and `MFACoordinator` to supervision tree in `lib/xactions/application.ex` alongside `SyncScheduler`
