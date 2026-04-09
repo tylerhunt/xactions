@@ -1,50 +1,118 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+SYNC IMPACT REPORT
+==================
+Version change: (none) → 1.0.0 (initial ratification)
+
+Added sections:
+  - I. Code Quality
+  - II. Test-First Development (NON-NEGOTIABLE)
+  - III. Integration & Contract Testing
+  - IV. User Experience Consistency
+  - V. Performance Requirements
+  - Development Workflow
+  - Governance
+
+Modified principles: N/A (initial)
+Removed sections: N/A (initial)
+
+Templates reviewed:
+  - .specify/templates/plan-template.md        ✅ Constitution Check section aligns
+  - .specify/templates/spec-template.md        ✅ Success Criteria section supports perf/UX goals
+  - .specify/templates/tasks-template.md       ✅ Test phases and parallel task structure align
+
+Follow-up TODOs: None — all placeholders resolved.
+-->
+
+# xactions Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Code Quality
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+Every line of code MUST be written for the next person who reads it. Features MUST be
+implemented as the simplest possible solution that satisfies the requirements — no
+speculative abstractions, no pre-emptive generalization. Complexity MUST be justified
+explicitly in the plan's Complexity Tracking table.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+- Functions MUST have a single, clearly-named responsibility.
+- Dead code MUST be removed; commented-out code is not permitted in commits.
+- Dependencies MUST be introduced deliberately — each new dependency requires a stated
+  rationale in the PR description.
+- Code review MUST verify that no new complexity was introduced without a documented
+  reason.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### II. Test-First Development (NON-NEGOTIABLE)
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+TDD is mandatory. Tests MUST be written and reviewed by the user before any
+implementation begins. The red-green-refactor cycle is strictly enforced:
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+1. Write a failing test that describes the desired behavior.
+2. Get user approval that the test captures intent correctly.
+3. Confirm the test fails (red).
+4. Implement only enough code to make the test pass (green).
+5. Refactor with tests green throughout.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+No implementation task may be marked complete unless its tests existed first and passed
+after implementation. Skipping or retroactively adding tests is a constitution violation.
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+### III. Integration & Contract Testing
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+Unit tests alone are insufficient. Each feature MUST include integration tests that
+exercise the full path through the system against real dependencies (not mocks). Contract
+tests MUST be written for all inter-service or inter-module interfaces.
+
+- Contract tests MUST live in `tests/contract/` and cover every public interface.
+- Integration tests MUST run against real storage/services, not test doubles.
+- New contracts MUST have contract tests before any consumer code is merged.
+- Breaking a contract MUST trigger a MAJOR version bump and a migration plan.
+
+### IV. User Experience Consistency
+
+Every user-facing surface — CLI output, API responses, error messages, and documentation
+— MUST follow a single, consistent vocabulary and interaction model. Inconsistency in
+UX is treated as a bug.
+
+- Error messages MUST include: what went wrong, why it happened, and how to fix it.
+- CLI commands MUST follow the established verb-noun pattern for all subcommands.
+- API responses MUST use consistent field naming (snake_case) and status codes across
+  all endpoints.
+- New interaction patterns require explicit design approval before implementation.
+
+### V. Performance Requirements
+
+Performance requirements are first-class feature requirements and MUST be specified in
+the spec before implementation begins. Unspecified performance is not acceptable.
+
+- Every feature MUST document its performance goal in `plan.md` under Technical Context.
+- Latency targets MUST be stated as p95 values (e.g., `<200ms p95`).
+- Features that touch critical paths MUST include a benchmark in the test suite.
+- Performance regressions MUST be flagged in code review and MUST NOT be merged without
+  explicit sign-off.
+
+## Development Workflow
+
+Pull requests MUST be small, self-contained, and independently reviewable. A PR that
+cannot be reviewed in under 30 minutes is too large. Branch names follow the repository
+convention (`###-brief-description`).
+
+- Each PR MUST link to a spec and pass the Constitution Check in `plan.md`.
+- All tests MUST pass before review is requested.
+- PRs MUST NOT include unrelated changes or speculative improvements.
+- Commits MUST follow the 50/72 rule (subject line ≤50 chars, body lines ≤72 chars).
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+This constitution supersedes all other development guidance. Amendments require:
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+1. A written proposal describing the change and rationale.
+2. Identification of all templates and artifacts that must be updated.
+3. A version bump per semantic versioning:
+   - **MAJOR**: Removal or redefinition of an existing principle.
+   - **MINOR**: Addition of a new principle or material expansion.
+   - **PATCH**: Clarification, wording, or non-semantic refinement.
+4. Update of `LAST_AMENDED_DATE` on the day the amendment is merged.
+
+All PRs and code reviews MUST verify compliance with this constitution. When in doubt,
+simpler is better and tests come first.
+
+**Version**: 1.0.0 | **Ratified**: 2026-04-09 | **Last Amended**: 2026-04-09
