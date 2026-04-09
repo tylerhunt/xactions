@@ -1,0 +1,11 @@
+.git/
+_build/
+deps/
+priv/repo/*.db
+priv/repo/*.db-shm
+priv/repo/*.db-wal
+priv/static/assets/
+assets/node_modules/
+.env
+.env.*
+*.log

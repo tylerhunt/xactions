@@ -24,13 +24,13 @@ All test tasks MUST be written and confirmed failing before any implementation t
 
 **Purpose**: Create the Phoenix project skeleton and configure all tooling.
 
-- [ ] T001 Run `mix phx.new xactions --live --no-mailer` and commit the generated scaffold
-- [ ] T002 [P] Add hex dependencies to `mix.exs`: `ecto_sqlite3`, `cloak_ecto`, `playwright`, `req`, `bcrypt_elixir`, `nimble_totp`, `nimble_csv`
-- [ ] T003 [P] Configure `config/runtime.exs` to read `DATABASE_PATH`, `CLOAK_KEY`, `SECRET_KEY_BASE`, `PHX_HOST`, `PLAYWRIGHT_SERVER_PORT` from environment
-- [ ] T004 [P] Configure `ecto_sqlite3` repo in `config/config.exs` with WAL pragmas (`journal_mode=WAL`, `foreign_keys=ON`, `busy_timeout=5000`, `synchronous=NORMAL`)
-- [ ] T005 [P] Configure TailwindCSS via Phoenix assets pipeline in `assets/tailwind.config.js` and `assets/css/app.css`
-- [ ] T006 [P] Create `Dockerfile` (multi-stage: Elixir build + Playwright runtime base image) and `docker-compose.yml` with Traefik Docker labels and `./data:/app/data` volume
-- [ ] T007 Create `.env.example` with all required environment variables documented
+- [x] T001 Run `mix phx.new xactions --live --no-mailer` and commit the generated scaffold
+- [x] T002 [P] Add hex dependencies to `mix.exs`: `ecto_sqlite3`, `cloak_ecto`, `playwright`, `req`, `bcrypt_elixir`, `nimble_totp`, `nimble_csv`
+- [x] T003 [P] Configure `config/runtime.exs` to read `DATABASE_PATH`, `CLOAK_KEY`, `SECRET_KEY_BASE`, `PHX_HOST`, `PLAYWRIGHT_SERVER_PORT` from environment
+- [x] T004 [P] Configure `ecto_sqlite3` repo in `config/config.exs` with WAL pragmas (`journal_mode=WAL`, `foreign_keys=ON`, `busy_timeout=5000`, `synchronous=NORMAL`)
+- [x] T005 [P] Configure TailwindCSS via Phoenix assets pipeline in `assets/tailwind.config.js` and `assets/css/app.css`
+- [x] T006 [P] Create `Dockerfile` (multi-stage: Elixir build + Playwright runtime base image) and `docker-compose.yml` with Traefik Docker labels and `./data:/app/data` volume
+- [x] T007 Create `.env.example` with all required environment variables documented
 
 **Checkpoint**: `mix deps.get && mix compile` succeeds with no errors.
 
