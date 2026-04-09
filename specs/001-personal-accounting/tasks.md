@@ -42,23 +42,23 @@ All test tasks MUST be written and confirmed failing before any implementation t
 
 **⚠️ CRITICAL**: No user story work begins until this phase is complete.
 
-- [ ] T008 Create Cloak vault in `lib/xactions/vault.ex` (AES-256-GCM, reads key from `CLOAK_KEY` env var; define `Xactions.Vault` module)
-- [ ] T009 Create migration 001: `categories` table in `priv/repo/migrations/` (id, name, icon, parent_id, is_system, timestamps)
-- [ ] T010 [P] Create migration 002: `institutions` table (id, name, website_url, scraper_module, sync_method enum, ofx_direct_url, export_format enum, credential_username binary, credential_password binary, totp_seed binary, session_cookies binary, status enum, last_synced_at, sync_interval_hours, is_manual_only, timestamps)
-- [ ] T011 [P] Create migration 003: `accounts` table (id, institution_id FK nullable, name, type enum, balance decimal, currency, external_account_id, is_manual, is_active, timestamps)
-- [ ] T012 [P] Create migration 004: `transactions` table (id, account_id FK, date, amount decimal, merchant_name, raw_merchant, fit_id, notes, is_pending, is_split, is_manual, category_id FK nullable, timestamps); unique index on (account_id, fit_id)
-- [ ] T013 [P] Create migration 005: `transaction_splits` table (id, transaction_id FK, category_id FK, amount decimal, notes, timestamps)
-- [ ] T014 [P] Create migration 006: `merchant_category_rules` table (id, merchant_pattern unique, category_id FK, timestamps)
-- [ ] T015 [P] Create migration 007: `holdings` table (id, account_id FK, symbol, name, quantity decimal, cost_basis decimal, current_price decimal, price_as_of, asset_class enum, external_security_id, timestamps)
-- [ ] T016 [P] Create migration 008: `budget_envelopes` table (id, name, type enum [fixed/variable/rollover], rollover_cap decimal nullable, archived_at nullable, timestamps)
-- [ ] T017 [P] Create migration 009: `budget_months` table (id, budget_envelope_id FK, month integer, year integer, allocated_amount decimal, timestamps); unique index on (budget_envelope_id, month, year)
-- [ ] T018 [P] Create migration 010: `envelope_categories` table (id, budget_envelope_id FK, category_id FK, timestamps); unique index on category_id (one category → at most one active envelope)
-- [ ] T019 [P] Create migration 011: `sync_logs` table (id, institution_id FK, status enum, accounts_updated, transactions_added, transactions_modified, error_message, started_at, completed_at, timestamps)
-- [ ] T020 Create category seed data in `priv/repo/seeds.exs`: 12 top-level system categories (Income, Housing, Food & Drink, Transport, Shopping, Health, Entertainment, Utilities, Travel, Finance, Transfer, Uncategorized) with `is_system: true`
-- [ ] T021 Implement Phoenix authentication: `lib/xactions_web/live/auth/login_live.ex` (bcrypt password check), `lib/xactions_web/plugs/auth_plug.ex` (session guard), and `lib/xactions_web/router.ex` (authenticated pipeline wrapping all live routes)
-- [ ] T022 Create test support files: `test/support/conn_case.ex` (authenticated conn helper), `test/support/fixtures.ex` (factory helpers for all entities), `test/support/fake_scraper.ex` (implements `ScraperBehaviour` for tests)
-- [ ] T023 [P] Create OFX fixture files: `test/fixtures/ofx/checking_sample.ofx`, `test/fixtures/ofx/credit_card_sample.ofx`, `test/fixtures/ofx/brokerage_sample.ofx` (real or realistic OFX payloads covering all parsed element types)
-- [ ] T024 Create `lib/xactions_web/components/core_components.ex` with shared components: modal, flash, form field wrappers, error message (what/why/how format per constitution)
+- [x] T008 Create Cloak vault in `lib/xactions/vault.ex` (AES-256-GCM, reads key from `CLOAK_KEY` env var; define `Xactions.Vault` module)
+- [x] T009 Create migration 001: `categories` table in `priv/repo/migrations/` (id, name, icon, parent_id, is_system, timestamps)
+- [x] T010 [P] Create migration 002: `institutions` table (id, name, website_url, scraper_module, sync_method enum, ofx_direct_url, export_format enum, credential_username binary, credential_password binary, totp_seed binary, session_cookies binary, status enum, last_synced_at, sync_interval_hours, is_manual_only, timestamps)
+- [x] T011 [P] Create migration 003: `accounts` table (id, institution_id FK nullable, name, type enum, balance decimal, currency, external_account_id, is_manual, is_active, timestamps)
+- [x] T012 [P] Create migration 004: `transactions` table (id, account_id FK, date, amount decimal, merchant_name, raw_merchant, fit_id, notes, is_pending, is_split, is_manual, category_id FK nullable, timestamps); unique index on (account_id, fit_id)
+- [x] T013 [P] Create migration 005: `transaction_splits` table (id, transaction_id FK, category_id FK, amount decimal, notes, timestamps)
+- [x] T014 [P] Create migration 006: `merchant_category_rules` table (id, merchant_pattern unique, category_id FK, timestamps)
+- [x] T015 [P] Create migration 007: `holdings` table (id, account_id FK, symbol, name, quantity decimal, cost_basis decimal, current_price decimal, price_as_of, asset_class enum, external_security_id, timestamps)
+- [x] T016 [P] Create migration 008: `budget_envelopes` table (id, name, type enum [fixed/variable/rollover], rollover_cap decimal nullable, archived_at nullable, timestamps)
+- [x] T017 [P] Create migration 009: `budget_months` table (id, budget_envelope_id FK, month integer, year integer, allocated_amount decimal, timestamps); unique index on (budget_envelope_id, month, year)
+- [x] T018 [P] Create migration 010: `envelope_categories` table (id, budget_envelope_id FK, category_id FK, timestamps); unique index on category_id (one category → at most one active envelope)
+- [x] T019 [P] Create migration 011: `sync_logs` table (id, institution_id FK, status enum, accounts_updated, transactions_added, transactions_modified, error_message, started_at, completed_at, timestamps)
+- [x] T020 Create category seed data in `priv/repo/seeds.exs`: 12 top-level system categories (Income, Housing, Food & Drink, Transport, Shopping, Health, Entertainment, Utilities, Travel, Finance, Transfer, Uncategorized) with `is_system: true`
+- [x] T021 Implement Phoenix authentication: `lib/xactions_web/live/auth/login_live.ex` (bcrypt password check), `lib/xactions_web/plugs/auth_plug.ex` (session guard), and `lib/xactions_web/router.ex` (authenticated pipeline wrapping all live routes)
+- [x] T022 Create test support files: `test/support/conn_case.ex` (authenticated conn helper), `test/support/fixtures.ex` (factory helpers for all entities), `test/support/fake_scraper.ex` (implements `ScraperBehaviour` for tests)
+- [x] T023 [P] Create OFX fixture files: `test/fixtures/ofx/checking_sample.ofx`, `test/fixtures/ofx/credit_card_sample.ofx`, `test/fixtures/ofx/brokerage_sample.ofx` (real or realistic OFX payloads covering all parsed element types)
+- [x] T024 Create `lib/xactions_web/components/core_components.ex` with shared components: modal, flash, form field wrappers, error message (what/why/how format per constitution)
 
 **Checkpoint**: `mix ecto.setup` completes; login page renders; `mix test` passes (no tests yet — baseline green).
 

@@ -1,5 +1,14 @@
 import Config
 
+config :xactions, Xactions.Vault,
+  ciphers: [
+    default:
+      {Cloak.Ciphers.AES.GCM,
+       tag: "AES.GCM.V1",
+       key: Base.decode64!("w9T0vedKm9QKc1N5AzBKaRgJPVoNLs/Zy+7DY5xdIV0="),
+       iv_length: 12}
+  ]
+
 # Configure your database
 config :xactions, Xactions.Repo,
   database: Path.expand("../priv/repo/dev.db", Path.dirname(__ENV__.file)),

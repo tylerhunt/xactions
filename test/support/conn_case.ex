@@ -35,4 +35,8 @@ defmodule XactionsWeb.ConnCase do
     Xactions.DataCase.setup_sandbox(tags)
     {:ok, conn: Phoenix.ConnTest.build_conn()}
   end
+
+  def authenticated_conn(conn) do
+    Plug.Test.init_test_session(conn, authenticated: true)
+  end
 end

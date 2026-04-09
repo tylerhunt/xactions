@@ -10,6 +10,7 @@ defmodule Xactions.Application do
     children = [
       XactionsWeb.Telemetry,
       Xactions.Repo,
+      Xactions.Vault,
       {DNSCluster, query: Application.get_env(:xactions, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: Xactions.PubSub},
       # Start a worker by calling: Xactions.Worker.start_link(arg)
