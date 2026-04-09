@@ -13,9 +13,8 @@ defmodule Xactions.Application do
       Xactions.Vault,
       {DNSCluster, query: Application.get_env(:xactions, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: Xactions.PubSub},
-      # Start a worker by calling: Xactions.Worker.start_link(arg)
-      # {Xactions.Worker, arg},
-      # Start to serve requests, typically the last entry
+      Xactions.Sync.MFACoordinator,
+      Xactions.Sync.SyncScheduler,
       XactionsWeb.Endpoint
     ]
 

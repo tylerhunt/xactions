@@ -138,6 +138,7 @@ defmodule Xactions.Sync.OFX do
       return_nil_if_blank(symbol, fn ->
         %{
           symbol: symbol,
+          name: tag_value(invpos, "MEMO"),
           quantity: invpos |> tag_value("UNITS") |> parse_decimal(),
           current_price: invpos |> tag_value("UNITPRICE") |> parse_decimal(),
           price_as_of: invpos |> tag_value("DTPRICEASOF") |> parse_ofx_datetime(),

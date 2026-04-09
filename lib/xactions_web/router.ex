@@ -31,7 +31,12 @@ defmodule XactionsWeb.Router do
   scope "/", XactionsWeb do
     pipe_through [:browser, :authenticated]
 
-    get "/", PageController, :home
+    live "/", DashboardLive
+    live "/accounts", AccountsLive
+    live "/transactions", TransactionsLive
+    live "/portfolio", PortfolioLive
+    live "/budget", BudgetLive
+    live "/reports", ReportsLive
   end
 
   # Enable LiveDashboard in development

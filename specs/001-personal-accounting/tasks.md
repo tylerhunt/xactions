@@ -76,7 +76,7 @@ All test tasks MUST be written and confirmed failing before any implementation t
 - [x] T026 [P] [US1] Write CSV parser unit tests in `test/xactions/sync/csv_parser_test.exs`: parse sample CSV with institution column-map config; assert normalized transaction output
 - [x] T027 [P] [US1] Write `Accounts` context integration tests in `test/xactions/accounts/accounts_test.exs`: create institution (with encrypted credentials), create manual account, list accounts, update institution status transitions
 - [x] T028 [P] [US1] Write `SyncWorker` integration tests in `test/xactions/sync/sync_worker_test.exs`: use `FakeScraper` to simulate a successful sync, MFA pause, and credential error; assert `SyncLog` entries and account balance updates
-- [ ] T029 [US1] Write `AccountsLive` and `DashboardLive` LiveView tests in `test/xactions_web/live/accounts_live_test.exs` and `test/xactions_web/live/dashboard_live_test.exs`: add institution form, trigger sync, confirm accounts appear, confirm reconnect alert
+- [x] T029 [US1] Write `AccountsLive` and `DashboardLive` LiveView tests in `test/xactions_web/live/accounts_live_test.exs` and `test/xactions_web/live/dashboard_live_test.exs`: add institution form, trigger sync, confirm accounts appear, confirm reconnect alert
 
 ### Implementation for User Story 1
 
@@ -88,14 +88,14 @@ All test tasks MUST be written and confirmed failing before any implementation t
 - [x] T035 [US1] Implement `Accounts` context in `lib/xactions/accounts/accounts.ex`: `list_institutions/0`, `get_institution!/1`, `create_institution/1`, `update_institution_status/2`, `disconnect_institution/1` (deletes institution + all accounts + all their transactions)
 - [x] T036 [P] [US1] Implement `SyncLog` schema in `lib/xactions/sync/sync_log.ex`: Ecto schema with status enum, belongs_to institution
 - [x] T037 [US1] Implement `SyncWorker` in `lib/xactions/sync/sync_worker.ex`: decrypt credentials, launch Playwright browser context, call scraper module, parse OFX/CSV output, upsert accounts + transactions, write SyncLog, broadcast PubSub events (`sync:status`)
-- [ ] T038 [US1] Implement `SyncScheduler` GenServer in `lib/xactions/sync/sync_scheduler.ex`: supervised, schedules per-institution syncs via `Process.send_after`; handles `{:sync_now, institution_id}` and `{:sync_all}` messages; manual trigger callable from LiveView
-- [ ] T039 [US1] Implement `MFACoordinator` GenServer in `lib/xactions/sync/mfa_coordinator.ex`: pauses a SyncWorker awaiting an MFA code; accepts `resolve_mfa/2` call from MfaLive; times out after 5 minutes with `:mfa_timeout` error
-- [ ] T040 [US1] Add `ConnectorSupervisor` and `MFACoordinator` to supervision tree in `lib/xactions/application.ex` alongside `SyncScheduler`
-- [ ] T041 [P] [US1] Implement example scraper stub in `lib/xactions/sync/scrapers/example_bank.ex` implementing `ScraperBehaviour` with inline documentation showing Playwright navigation pattern
-- [ ] T042 [US1] Implement `AccountsLive` in `lib/xactions_web/live/accounts_live.ex`: handles `add_institution`, `save_institution`, `edit_credentials`, `save_credentials`, `remove_institution` events per `contracts/liveview-events.md`; integrates Playwright Link flow via push event to JS hook
-- [ ] T043 [US1] Implement `MfaLive` component in `lib/xactions_web/live/mfa_live.ex`: subscribes to `sync:status` PubSub; shows MFA input modal on `:mfa_required`; handles `submit_mfa` and `dismiss_mfa` events
-- [ ] T044 [P] [US1] Implement `DashboardLive` (accounts panel) in `lib/xactions_web/live/dashboard_live.ex`: displays all accounts grouped by institution with balances; `sync_now` and `sync_all` events; subscribes to `sync:status` PubSub; shows reconnect alerts
-- [ ] T045 [P] [US1] Implement `AccountCard` component in `lib/xactions_web/components/account_card.ex` and `SyncStatusBadge` in `lib/xactions_web/components/sync_status_badge.ex`
+- [x] T038 [US1] Implement `SyncScheduler` GenServer in `lib/xactions/sync/sync_scheduler.ex`: supervised, schedules per-institution syncs via `Process.send_after`; handles `{:sync_now, institution_id}` and `{:sync_all}` messages; manual trigger callable from LiveView
+- [x] T039 [US1] Implement `MFACoordinator` GenServer in `lib/xactions/sync/mfa_coordinator.ex`: pauses a SyncWorker awaiting an MFA code; accepts `resolve_mfa/2` call from MfaLive; times out after 5 minutes with `:mfa_timeout` error
+- [x] T040 [US1] Add `ConnectorSupervisor` and `MFACoordinator` to supervision tree in `lib/xactions/application.ex` alongside `SyncScheduler`
+- [x] T041 [P] [US1] Implement example scraper stub in `lib/xactions/sync/scrapers/example_bank.ex` implementing `ScraperBehaviour` with inline documentation showing Playwright navigation pattern
+- [x] T042 [US1] Implement `AccountsLive` in `lib/xactions_web/live/accounts_live.ex`: handles `add_institution`, `save_institution`, `edit_credentials`, `save_credentials`, `remove_institution` events per `contracts/liveview-events.md`; integrates Playwright Link flow via push event to JS hook
+- [x] T043 [US1] Implement `MfaLive` component in `lib/xactions_web/live/mfa_live.ex`: subscribes to `sync:status` PubSub; shows MFA input modal on `:mfa_required`; handles `submit_mfa` and `dismiss_mfa` events
+- [x] T044 [P] [US1] Implement `DashboardLive` (accounts panel) in `lib/xactions_web/live/dashboard_live.ex`: displays all accounts grouped by institution with balances; `sync_now` and `sync_all` events; subscribes to `sync:status` PubSub; shows reconnect alerts
+- [x] T045 [P] [US1] Implement `AccountCard` component in `lib/xactions_web/components/account_card.ex` and `SyncStatusBadge` in `lib/xactions_web/components/sync_status_badge.ex`
 
 **Checkpoint**: Manual institution creation, sync via FakeScraper, and account display all work end-to-end. `mix test test/xactions/sync/ test/xactions_web/live/accounts_live_test.exs` passes.
 
@@ -109,18 +109,18 @@ All test tasks MUST be written and confirmed failing before any implementation t
 
 ### Tests for User Story 2 ⚠️ Write first — confirm failing before T051
 
-- [ ] T046 [P] [US2] Write `Transactions` context integration tests in `test/xactions/transactions/transactions_test.exs`: list transactions with filters, search by merchant, update category + merchant rule upsert, split transaction validation (amounts must sum), prevent split with mismatched total
-- [ ] T047 [US2] Write `TransactionsLive` LiveView tests in `test/xactions_web/live/transactions_live_test.exs`: filter by date range, category edit inline, split editor save/cancel, manual transaction add, load-more pagination
+- [x] T046 [P] [US2] Write `Transactions` context integration tests in `test/xactions/transactions/transactions_test.exs`: list transactions with filters, search by merchant, update category + merchant rule upsert, split transaction validation (amounts must sum), prevent split with mismatched total
+- [x] T047 [US2] Write `TransactionsLive` LiveView tests in `test/xactions_web/live/transactions_live_test.exs`: filter by date range, category edit inline, split editor save/cancel, manual transaction add, load-more pagination
 
 ### Implementation for User Story 2
 
-- [ ] T048 [P] [US2] Implement `Category` schema in `lib/xactions/transactions/category.ex`: Ecto schema with parent_id self-reference, is_system flag, changeset (prevent deletion of system categories)
-- [ ] T049 [P] [US2] Implement `Transaction` schema in `lib/xactions/transactions/transaction.ex`: Ecto schema with category_id nullable when is_split true; changeset enforcing split/category mutual exclusivity
-- [ ] T050 [P] [US2] Implement `TransactionSplit` schema in `lib/xactions/transactions/transaction_split.ex`: changeset with split-sum validation against parent transaction amount
-- [ ] T051 [P] [US2] Implement `MerchantCategoryRule` schema in `lib/xactions/transactions/merchant_rule.ex`: upsert-friendly changeset; `normalize_merchant/1` helper (lowercase, strip trailing digits/punctuation)
-- [ ] T052 [US2] Implement `Transactions` context in `lib/xactions/transactions/transactions.ex`: `list_transactions/1` (filterable by account, category, date range, query), `search_transactions/1`, `update_category/2` (upserts merchant rule), `split_transaction/2` (validates sum), `add_manual_transaction/1`; auto-categorization via `MerchantCategoryRule` lookup on import
-- [ ] T053 [US2] Implement `TransactionsLive` in `lib/xactions_web/live/transactions_live.ex`: handles all events from `contracts/liveview-events.md`; 50-per-page cursor pagination; search debounced via Phoenix LiveView's `phx-debounce`
-- [ ] T054 [P] [US2] Implement `TransactionRow` component in `lib/xactions_web/components/transaction_row.ex` and `CategorySelect` in `lib/xactions_web/components/category_select.ex`
+- [x] T048 [P] [US2] Implement `Category` schema in `lib/xactions/transactions/category.ex`: Ecto schema with parent_id self-reference, is_system flag, changeset (prevent deletion of system categories)
+- [x] T049 [P] [US2] Implement `Transaction` schema in `lib/xactions/transactions/transaction.ex`: Ecto schema with category_id nullable when is_split true; changeset enforcing split/category mutual exclusivity
+- [x] T050 [P] [US2] Implement `TransactionSplit` schema in `lib/xactions/transactions/transaction_split.ex`: changeset with split-sum validation against parent transaction amount
+- [x] T051 [P] [US2] Implement `MerchantCategoryRule` schema in `lib/xactions/transactions/merchant_rule.ex`: upsert-friendly changeset; `normalize_merchant/1` helper (lowercase, strip trailing digits/punctuation)
+- [x] T052 [US2] Implement `Transactions` context in `lib/xactions/transactions/transactions.ex`: `list_transactions/1` (filterable by account, category, date range, query), `search_transactions/1`, `update_category/2` (upserts merchant rule), `split_transaction/2` (validates sum), `add_manual_transaction/1`; auto-categorization via `MerchantCategoryRule` lookup on import
+- [x] T053 [US2] Implement `TransactionsLive` in `lib/xactions_web/live/transactions_live.ex`: handles all events from `contracts/liveview-events.md`; 50-per-page cursor pagination; search debounced via Phoenix LiveView's `phx-debounce`
+- [x] T054 [P] [US2] Implement `TransactionRow` component in `lib/xactions_web/components/transaction_row.ex` and `CategorySelect` in `lib/xactions_web/components/category_select.ex`
 
 **Checkpoint**: Full transaction workflow (view, filter, search, categorize, split) works without sync. `mix test test/xactions/transactions/ test/xactions_web/live/transactions_live_test.exs` passes.
 
@@ -134,15 +134,15 @@ All test tasks MUST be written and confirmed failing before any implementation t
 
 ### Tests for User Story 3 ⚠️ Write first — confirm failing before T058
 
-- [ ] T055 [P] [US3] Write `Portfolio` context integration tests in `test/xactions/portfolio/portfolio_test.exs`: import brokerage OFX fixture, verify holding records, computed current_value/gain_loss, allocation percentages by asset class, stale-price display logic
-- [ ] T056 [US3] Write `PortfolioLive` LiveView tests in `test/xactions_web/live/portfolio_live_test.exs`: period selector updates chart data, price_as_of label present when data is stale
+- [x] T055 [P] [US3] Write `Portfolio` context integration tests in `test/xactions/portfolio/portfolio_test.exs`: import brokerage OFX fixture, verify holding records, computed current_value/gain_loss, allocation percentages by asset class, stale-price display logic
+- [x] T056 [US3] Write `PortfolioLive` LiveView tests in `test/xactions_web/live/portfolio_live_test.exs`: period selector updates chart data, price_as_of label present when data is stale
 
 ### Implementation for User Story 3
 
-- [ ] T057 [P] [US3] Implement `Holding` schema in `lib/xactions/portfolio/holding.ex`: Ecto schema with asset_class enum; computed fields `current_value`, `unrealized_gain_loss`, `unrealized_gain_loss_pct` as virtual fields populated in context queries
-- [ ] T058 [US3] Implement `Portfolio` context in `lib/xactions/portfolio/portfolio.ex`: `list_holdings/0` (with computed fields), `get_allocation/0` (grouped by asset_class with percentage), `replace_holdings_for_account/2` (delete-then-insert from OFX sync), `oldest_price_timestamp/0`
-- [ ] T059 [US3] Implement `PortfolioLive` in `lib/xactions_web/live/portfolio_live.ex`: handles `set_period` event; shows `price_as_of` banner when data is older than 15 minutes; allocation breakdown list
-- [ ] T060 [P] [US3] Implement `ChartComponent` in `lib/xactions_web/components/chart_component.ex`: server-rendered SVG or lightweight JS chart hook; used for portfolio performance and net worth history
+- [x] T057 [P] [US3] Implement `Holding` schema in `lib/xactions/portfolio/holding.ex`: Ecto schema with asset_class enum; computed fields `current_value`, `unrealized_gain_loss`, `unrealized_gain_loss_pct` as virtual fields populated in context queries
+- [x] T058 [US3] Implement `Portfolio` context in `lib/xactions/portfolio/portfolio.ex`: `list_holdings/0` (with computed fields), `get_allocation/0` (grouped by asset_class with percentage), `replace_holdings_for_account/2` (delete-then-insert from OFX sync), `oldest_price_timestamp/0`
+- [x] T059 [US3] Implement `PortfolioLive` in `lib/xactions_web/live/portfolio_live.ex`: handles `set_period` event; shows `price_as_of` banner when data is older than 15 minutes; allocation breakdown list
+- [x] T060 [P] [US3] Implement `ChartComponent` in `lib/xactions_web/components/chart_component.ex`: server-rendered SVG or lightweight JS chart hook; used for portfolio performance and net worth history
 
 **Checkpoint**: Brokerage OFX fixture imports correctly; portfolio page shows holdings, allocation, and price-as-of label. `mix test test/xactions/portfolio/ test/xactions_web/live/portfolio_live_test.exs` passes.
 
@@ -156,7 +156,7 @@ All test tasks MUST be written and confirmed failing before any implementation t
 
 ### Tests for User Story 4 ⚠️ Write first — confirm failing before T067
 
-- [ ] T061 [P] [US4] Write `Budgeting` context integration tests in `test/xactions/budgeting/budgeting_test.exs`:
+- [x] T061 [P] [US4] Write `Budgeting` context integration tests in `test/xactions/budgeting/budgeting_test.exs`:
   - TBB = sum of Income-category transactions minus sum of allocations
   - TBB updates when an Income transaction is added/removed
   - Fixed envelope carries same amount forward at month rollover
@@ -167,14 +167,14 @@ All test tasks MUST be written and confirmed failing before any implementation t
   - Category cannot be assigned to two active envelopes simultaneously
   - Envelope going negative (overspent) is allowed and stored
   - `list_unassigned_transactions/1` returns only transactions in categories not mapped to any active envelope
-- [ ] T062 [US4] Write `BudgetLive` LiveView tests in `test/xactions_web/live/budget_live_test.exs`: TBB indicator updates in real time via PubSub when a transaction arrives, envelope balance decreases on spending, unassigned spending section populates, archive envelope removes it from active view
+- [x] T062 [US4] Write `BudgetLive` LiveView tests in `test/xactions_web/live/budget_live_test.exs`: TBB indicator updates in real time via PubSub when a transaction arrives, envelope balance decreases on spending, unassigned spending section populates, archive envelope removes it from active view
 
 ### Implementation for User Story 4
 
-- [ ] T063 [P] [US4] Implement `BudgetEnvelope` schema in `lib/xactions/budgeting/budget_envelope.ex`: type enum (fixed/variable/rollover), `rollover_cap` nullable decimal, `archived_at` nullable datetime; changeset prevents deletion when budget_months exist
-- [ ] T064 [P] [US4] Implement `BudgetMonth` schema in `lib/xactions/budgeting/budget_month.ex`: belongs_to budget_envelope, month/year integers, allocated_amount decimal; unique constraint on (envelope_id, month, year)
-- [ ] T065 [P] [US4] Implement `EnvelopeCategory` schema in `lib/xactions/budgeting/envelope_category.ex`: belongs_to budget_envelope and category; unique index on category_id enforcing single-envelope-per-category rule
-- [ ] T066 [US4] Implement `Budgeting` context in `lib/xactions/budgeting/budgeting.ex`:
+- [x] T063 [P] [US4] Implement `BudgetEnvelope` schema in `lib/xactions/budgeting/budget_envelope.ex`: type enum (fixed/variable/rollover), `rollover_cap` nullable decimal, `archived_at` nullable datetime; changeset prevents deletion when budget_months exist
+- [x] T064 [P] [US4] Implement `BudgetMonth` schema in `lib/xactions/budgeting/budget_month.ex`: belongs_to budget_envelope, month/year integers, allocated_amount decimal; unique constraint on (envelope_id, month, year)
+- [x] T065 [P] [US4] Implement `EnvelopeCategory` schema in `lib/xactions/budgeting/envelope_category.ex`: belongs_to budget_envelope and category; unique index on category_id enforcing single-envelope-per-category rule
+- [x] T066 [US4] Implement `Budgeting` context in `lib/xactions/budgeting/budgeting.ex`:
   - `calculate_tbb/1` — sum Income-category transactions for month minus sum of BudgetMonth allocations
   - `create_envelope/1`, `update_envelope/2`, `archive_envelope/1`
   - `assign_category_to_envelope/2`, `remove_category_from_envelope/2`
@@ -182,10 +182,10 @@ All test tasks MUST be written and confirmed failing before any implementation t
   - `envelope_balance/2` — allocated minus spent (sum of transactions in assigned categories)
   - `list_unassigned_transactions/1` — transactions in categories not in any active envelope
   - `rollover_month/1` — creates next month's BudgetMonth rows per type rules; enforces cap for rollover envelopes; returns surplus to TBB
-- [ ] T067 [US4] Add month rollover trigger to `SyncScheduler` in `lib/xactions/sync/sync_scheduler.ex`: schedule `Budgeting.rollover_month/1` on the 1st of each month via `Process.send_after`; idempotent (skip if already rolled over)
-- [ ] T068 [US4] Implement `BudgetLive` in `lib/xactions_web/live/budget_live.ex`: shows TBB indicator, envelope list with budgeted/spent/remaining per envelope, unassigned spending section; handles `create_envelope`, `archive_envelope`, `set_allocation`, `assign_category` events; subscribes to transaction PubSub to update balances in real time
-- [ ] T069 [P] [US4] Implement `TBBIndicator` component in `lib/xactions_web/components/tbb_indicator.ex`: prominently shows TBB with colour coding (green = $0, amber = positive, red = negative/over-allocated)
-- [ ] T070 [P] [US4] Implement `BudgetEnvelopeCard` component in `lib/xactions_web/components/budget_envelope_card.ex`: shows envelope name, type badge, allocated/spent/remaining amounts, progress bar; highlights over-budget state
+- [x] T067 [US4] Add month rollover trigger to `SyncScheduler` in `lib/xactions/sync/sync_scheduler.ex`: schedule `Budgeting.rollover_month/1` on the 1st of each month via `Process.send_after`; idempotent (skip if already rolled over)
+- [x] T068 [US4] Implement `BudgetLive` in `lib/xactions_web/live/budget_live.ex`: shows TBB indicator, envelope list with budgeted/spent/remaining per envelope, unassigned spending section; handles `create_envelope`, `archive_envelope`, `set_allocation`, `assign_category` events; subscribes to transaction PubSub to update balances in real time
+- [x] T069 [P] [US4] Implement `TBBIndicator` component in `lib/xactions_web/components/tbb_indicator.ex`: prominently shows TBB with colour coding (green = $0, amber = positive, red = negative/over-allocated)
+- [x] T070 [P] [US4] Implement `BudgetEnvelopeCard` component in `lib/xactions_web/components/budget_envelope_card.ex`: shows envelope name, type badge, allocated/spent/remaining amounts, progress bar; highlights over-budget state
 
 **Checkpoint**: Full ZBB workflow works: envelopes created, categories assigned, Income transaction grows TBB, allocation reduces TBB to $0, spending reduces envelope in real time, month rollover produces correct carry-forward per type. `mix test test/xactions/budgeting/ test/xactions_web/live/budget_live_test.exs` passes.
 
@@ -199,20 +199,20 @@ All test tasks MUST be written and confirmed failing before any implementation t
 
 ### Tests for User Story 5 ⚠️ Write first — confirm failing before T074
 
-- [ ] T071 [P] [US5] Write `Reporting` context integration tests in `test/xactions/reporting/reporting_test.exs`: net worth = assets - liabilities; spending_by_envelope sums transactions in assigned categories; month-over-month delta is correct; budget history grid returns correct (month × envelope) matrix
-- [ ] T072 [US5] Write `ReportsLive` and `DashboardLive` (net worth panel) tests in `test/xactions_web/live/reports_live_test.exs`: select month changes data, drill into envelope shows transactions, net worth history chart renders
+- [x] T071 [P] [US5] Write `Reporting` context integration tests in `test/xactions/reporting/reporting_test.exs`: net worth = assets - liabilities; spending_by_envelope sums transactions in assigned categories; month-over-month delta is correct; budget history grid returns correct (month × envelope) matrix
+- [x] T072 [US5] Write `ReportsLive` and `DashboardLive` (net worth panel) tests in `test/xactions_web/live/reports_live_test.exs`: select month changes data, drill into envelope shows transactions, net worth history chart renders
 
 ### Implementation for User Story 5
 
-- [ ] T073 [US5] Implement `Reporting` context in `lib/xactions/reporting/reporting.ex`:
+- [x] T073 [US5] Implement `Reporting` context in `lib/xactions/reporting/reporting.ex`:
   - `net_worth/0` — sum of all asset account balances minus all liability account balances
   - `net_worth_history/1` — monthly net worth for trailing N months
   - `spending_by_envelope/2` — for a given month/year, spending per envelope
   - `month_over_month/2` — compare two months by envelope (delta + pct)
   - `budget_history_grid/0` — (month × envelope) matrix of allocated and spent amounts
-- [ ] T074 [US5] Implement `ReportsLive` in `lib/xactions_web/live/reports_live.ex`: handles `select_month`, `set_budget` (delegates to Budgeting context), `clear_budget` events; budget history grid with drill-down to transactions; month-over-month comparison table
-- [ ] T075 [US5] Update `DashboardLive` in `lib/xactions_web/live/dashboard_live.ex` to add net worth panel: total assets, total liabilities, net worth figure, month-over-month change using `Reporting.net_worth/0`
-- [ ] T076 [P] [US5] Implement `NetWorthWidget` component in `lib/xactions_web/components/net_worth_widget.ex`: renders net worth with month-over-month delta and directional indicator
+- [x] T074 [US5] Implement `ReportsLive` in `lib/xactions_web/live/reports_live.ex`: handles `select_month`, `set_budget` (delegates to Budgeting context), `clear_budget` events; budget history grid with drill-down to transactions; month-over-month comparison table
+- [x] T075 [US5] Update `DashboardLive` in `lib/xactions_web/live/dashboard_live.ex` to add net worth panel: total assets, total liabilities, net worth figure, month-over-month change using `Reporting.net_worth/0`
+- [x] T076 [P] [US5] Implement `NetWorthWidget` component in `lib/xactions_web/components/net_worth_widget.ex`: renders net worth with month-over-month delta and directional indicator
 
 **Checkpoint**: Net worth dashboard, spending-by-envelope report, month-over-month table, and budget history grid all render correctly. `mix test test/xactions/reporting/ test/xactions_web/live/reports_live_test.exs` passes.
 
@@ -222,12 +222,12 @@ All test tasks MUST be written and confirmed failing before any implementation t
 
 **Purpose**: Non-story-specific improvements affecting all phases.
 
-- [ ] T077 [P] Add sync failure alert: if a `SyncLog` error entry is older than 1 hour and unacknowledged, broadcast a PubSub alert to `DashboardLive` in `lib/xactions/sync/sync_scheduler.ex` (hourly check via `Process.send_after`)
-- [ ] T078 [P] Implement pending transaction settlement: in `SyncWorker`, when an incoming transaction has the same `fit_id` as an existing `is_pending: true` row, update the amount and clear `is_pending` rather than inserting a duplicate
-- [ ] T079 [P] Add database indexes: verify all indexes from `data-model.md` are present in migrations; add a migration for any missing (transactions date DESC, merchant_name, holdings account+symbol)
-- [ ] T080 [P] Performance benchmark task: add `test/xactions/performance_test.exs` with ExUnit benchmarks asserting dashboard load < 2s p95 and transaction search < 500ms p95 against a 50k-row SQLite fixture
-- [ ] T081 Run quickstart validation checklist from `specs/001-personal-accounting/quickstart.md` end-to-end in Docker; document any deviations
-- [ ] T082 [P] Add `mix hex.audit` to CI and pin all deps in `mix.lock`; document in `CLAUDE.md`
+- [x] T077 [P] Add sync failure alert: if a `SyncLog` error entry is older than 1 hour and unacknowledged, broadcast a PubSub alert to `DashboardLive` in `lib/xactions/sync/sync_scheduler.ex` (hourly check via `Process.send_after`)
+- [x] T078 [P] Implement pending transaction settlement: in `SyncWorker`, when an incoming transaction has the same `fit_id` as an existing `is_pending: true` row, update the amount and clear `is_pending` rather than inserting a duplicate
+- [x] T079 [P] Add database indexes: verify all indexes from `data-model.md` are present in migrations; add a migration for any missing (transactions date DESC, merchant_name, holdings account+symbol)
+- [x] T080 [P] Performance benchmark task: add `test/xactions/performance_test.exs` with ExUnit benchmarks asserting dashboard load < 2s p95 and transaction search < 500ms p95 against a 50k-row SQLite fixture
+- [x] T081 Run quickstart validation checklist from `specs/001-personal-accounting/quickstart.md` end-to-end in Docker; document any deviations
+- [x] T082 [P] Add `mix hex.audit` to CI and pin all deps in `mix.lock`; document in `CLAUDE.md`
 
 ---
 

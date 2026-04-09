@@ -16,6 +16,14 @@ defmodule Xactions.Sync.SyncWorker do
   alias Xactions.Sync.SyncLog
 
   def sync(%Institution{} = institution) do
+    do_sync(institution)
+  rescue
+    e ->
+      Logger.error("[SyncWorker] Unexpected error for institution #{institution.id}: #{Exception.message(e)}")
+      {:error, :unexpected}
+  end
+
+  defp do_sync(%Institution{} = institution) do
     log = start_log(institution)
     {:ok, _} = Accounts.update_institution_status(institution, "syncing")
     broadcast(institution.id, :sync_started)
