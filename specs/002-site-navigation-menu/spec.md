@@ -58,13 +58,14 @@ The navigation menu reflects the user's current authentication state. An unauthe
 - What happens when a user accesses a URL that does not correspond to any nav item? The menu still renders; no section item is highlighted as active.
 - What happens on very small screens? The menu must remain accessible and usable (readable, tappable links) without being cut off.
 - What nav items are visible to unauthenticated users? Only the Sign In link is shown; section links (Dashboard, Accounts, etc.) are hidden until the user is authenticated.
+- What happens when an unauthenticated user visits the root path (/)? They are redirected to the sign-in page. The root path (/) is the Dashboard; authenticated users visiting it see the Dashboard directly.
 
 ## Requirements *(mandatory)*
 
 ### Functional Requirements
 
 - **FR-001**: The navigation menu MUST be visible on every page of the application.
-- **FR-002**: When a user is authenticated, the navigation menu MUST include links to all primary sections: Dashboard, Accounts, Transactions, Portfolio, Budget, and Reports.
+- **FR-002**: When a user is authenticated, the navigation menu MUST include links to all primary sections: Dashboard (/), Accounts, Transactions, Portfolio, Budget, and Reports.
 - **FR-003**: The navigation menu MUST visually indicate which section the user is currently viewing.
 - **FR-004**: Only one navigation link MUST be in the active/highlighted state at a time.
 - **FR-005**: Clicking a navigation link MUST take the user to the corresponding page.
@@ -72,6 +73,7 @@ The navigation menu reflects the user's current authentication state. An unauthe
 - **FR-007**: When a user is not authenticated, the navigation MUST display a Sign In link and MUST NOT display section links.
 - **FR-008**: When a user is authenticated, the navigation MUST display a Sign Out link and MUST NOT display a Sign In link.
 - **FR-009**: Clicking Sign Out MUST end the user's session and redirect the user to the sign-in page.
+- **FR-010**: Visiting the root path (/) while unauthenticated MUST redirect the user to the sign-in page.
 
 ## Success Criteria *(mandatory)*
 
@@ -96,3 +98,4 @@ The navigation menu reflects the user's current authentication state. An unauthe
 
 - Q: Should the navigation reflect authentication state? → A: Yes — show Sign In link when unauthenticated, Sign Out link when authenticated; section links are only shown to authenticated users.
 - Q: After signing out, where should the user land? → A: Redirect to the sign-in page.
+- Q: What happens when an unauthenticated user visits /? → A: Redirect to the sign-in page. / is the Dashboard; authenticated users see it directly.

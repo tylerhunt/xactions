@@ -76,6 +76,8 @@ config :xactions, XactionsWeb.Endpoint,
 # Enable dev routes for dashboard and mailbox
 config :xactions, dev_routes: true
 
+config :xactions, hashed_password: "$2b$12$8aAmmB1.H26kYK6LNTS6HuXKrQRqitZqo7FBl2xLBM33h0BtKb5AG"
+
 # Do not include metadata nor timestamps in development logs
 config :logger, :default_formatter, format: "[$level] $message\n"
 
