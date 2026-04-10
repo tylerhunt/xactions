@@ -7,18 +7,32 @@ defmodule XactionsWeb.Components.SyncStatusBadge do
   def sync_status_badge(assigns) do
     ~H"""
     <span class={badge_class(@status)} data-sync-status={@status}>
-      <%= label(@status) %>
+      {label(@status)}
     </span>
     """
   end
 
-  defp badge_class("active"), do: "badge badge-success badge-sm"
-  defp badge_class("syncing"), do: "badge badge-info badge-sm animate-pulse"
-  defp badge_class("mfa_required"), do: "badge badge-warning badge-sm"
-  defp badge_class("credential_error"), do: "badge badge-error badge-sm"
-  defp badge_class("error"), do: "badge badge-error badge-sm"
-  defp badge_class("inactive"), do: "badge badge-ghost badge-sm"
-  defp badge_class(_), do: "badge badge-ghost badge-sm"
+  defp badge_class("active"),
+    do: "text-xs font-medium px-2 py-0.5 rounded-full bg-[#10b981]/10 text-[#10b981]"
+
+  defp badge_class("syncing"),
+    do:
+      "text-xs font-medium px-2 py-0.5 rounded-full bg-[#3b82f6]/10 text-[#3b82f6] animate-pulse"
+
+  defp badge_class("mfa_required"),
+    do: "text-xs font-medium px-2 py-0.5 rounded-full bg-[#f59e0b]/10 text-[#f59e0b]"
+
+  defp badge_class("credential_error"),
+    do: "text-xs font-medium px-2 py-0.5 rounded-full bg-[#d4183d]/10 text-[#d4183d]"
+
+  defp badge_class("error"),
+    do: "text-xs font-medium px-2 py-0.5 rounded-full bg-[#d4183d]/10 text-[#d4183d]"
+
+  defp badge_class("inactive"),
+    do: "text-xs font-medium px-2 py-0.5 rounded-full bg-[#717182]/10 text-[#717182]"
+
+  defp badge_class(_),
+    do: "text-xs font-medium px-2 py-0.5 rounded-full bg-[#717182]/10 text-[#717182]"
 
   defp label("active"), do: "Active"
   defp label("syncing"), do: "Syncing…"

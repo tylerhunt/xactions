@@ -36,96 +36,133 @@ defmodule XactionsWeb.PortfolioLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <div class="container mx-auto p-6 max-w-4xl">
-      <h1 class="text-2xl font-bold mb-4">Portfolio</h1>
+    <div class="min-h-screen bg-[#f8f7f5]">
+      <div class="max-w-4xl mx-auto px-6 py-8">
+        <h1 class="text-2xl tracking-tight mb-6">Portfolio</h1>
 
-      <%= if @is_stale do %>
-        <div class="alert alert-warning mb-4" data-price-stale>
-          <span>Price data may be outdated — last updated <%= format_datetime(@price_as_of) %></span>
-        </div>
-      <% end %>
+        <%= if @is_stale do %>
+          <div
+            class="border-l-4 border-[#f59e0b] bg-[#f59e0b]/5 rounded-lg px-4 py-3 text-sm text-[#030213] mb-6"
+            data-price-stale
+          >
+            Price data may be outdated — last updated {format_datetime(@price_as_of)}
+          </div>
+        <% end %>
 
-      <%!-- Summary bar --%>
-      <div class="stats shadow mb-6">
-        <div class="stat">
-          <div class="stat-title">Total Value</div>
-          <div class="stat-value text-lg"><%= format_decimal(@total_value) %></div>
-        </div>
-        <div class="stat">
-          <div class="stat-title">Cost Basis</div>
-          <div class="stat-value text-lg"><%= format_decimal(@total_cost_basis) %></div>
-        </div>
-        <div class="stat">
-          <div class="stat-title">Unrealized Gain/Loss</div>
-          <div class={["stat-value text-lg", gain_loss_class(@total_gain_loss)]}>
-            <%= format_decimal(@total_gain_loss) %>
+        <%!-- Summary cards --%>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div data-summary="total-value" class="bg-white border border-black/[.08] rounded-xl p-5">
+            <div class="text-sm text-[#717182] mb-1">Total Value</div>
+            <div class="text-2xl tracking-tight">{format_decimal(@total_value)}</div>
+          </div>
+          <div data-summary="cost-basis" class="bg-white border border-black/[.08] rounded-xl p-5">
+            <div class="text-sm text-[#717182] mb-1">Cost Basis</div>
+            <div class="text-2xl tracking-tight">{format_decimal(@total_cost_basis)}</div>
+          </div>
+          <div data-summary="gain-loss" class="bg-white border border-black/[.08] rounded-xl p-5">
+            <div class="text-sm text-[#717182] mb-1">Unrealized Gain/Loss</div>
+            <div class={["text-2xl tracking-tight", gain_loss_class(@total_gain_loss)]}>
+              {format_decimal(@total_gain_loss)}
+            </div>
           </div>
         </div>
-      </div>
 
-      <%!-- Period selector --%>
-      <div class="flex gap-2 mb-4">
-        <%= for {label, period} <- [{"1W", :w1}, {"1M", :m1}, {"3M", :m3}, {"1Y", :y1}, {"All", :all}] do %>
-          <button
-            class={["btn btn-xs", @period == period && "btn-primary" || "btn-ghost"]}
-            phx-click="set_period"
-            phx-value-period={period}
-            data-period={period}
-            data-active={to_string(@period == period)}
-          >
-            <%= label %>
-          </button>
-        <% end %>
-      </div>
-
-      <%!-- Holdings list --%>
-      <%= if @holdings == [] do %>
-        <div class="text-center py-16 text-base-content/50">No holdings found.</div>
-      <% else %>
-        <div class="overflow-x-auto mb-6">
-          <table class="table table-sm">
-            <thead>
-              <tr>
-                <th>Symbol</th>
-                <th>Name</th>
-                <th>Shares</th>
-                <th>Price</th>
-                <th>Value</th>
-                <th>Gain/Loss</th>
-              </tr>
-            </thead>
-            <tbody>
-              <%= for holding <- @holdings do %>
-                <tr data-symbol={holding.symbol}>
-                  <td class="font-mono font-semibold"><%= holding.symbol %></td>
-                  <td><%= holding.name %></td>
-                  <td class="font-mono"><%= format_decimal(holding.quantity) %></td>
-                  <td class="font-mono"><%= format_decimal(holding.current_price) %></td>
-                  <td class="font-mono"><%= format_decimal(holding.current_value) %></td>
-                  <td class={["font-mono", gain_loss_class(holding.unrealized_gain_loss)]}>
-                    <%= format_decimal(holding.unrealized_gain_loss) %>
-                  </td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
-        </div>
-
-        <%!-- Allocation breakdown --%>
-        <h2 class="text-lg font-semibold mb-2">Allocation</h2>
-        <div class="space-y-2">
-          <%= for item <- @allocation do %>
-            <div class="flex items-center gap-3">
-              <span class="w-32 text-sm capitalize"><%= item.class %></span>
-              <div class="flex-1 bg-base-200 rounded h-3">
-                <div class="bg-primary rounded h-3" style={"width: #{item.pct}%"}></div>
-              </div>
-              <span class="text-sm w-16 text-right"><%= :erlang.float_to_binary(item.pct, decimals: 1) %>%</span>
-              <span class="font-mono text-sm w-24 text-right"><%= format_decimal(item.value) %></span>
-            </div>
+        <%!-- Period selector --%>
+        <div class="flex gap-2 mb-6">
+          <%= for {label, period} <- [{"1W", :w1}, {"1M", :m1}, {"3M", :m3}, {"1Y", :y1}, {"All", :all}] do %>
+            <button
+              class={[
+                "px-3 py-1.5 rounded-lg text-sm transition-colors",
+                if(@period == period,
+                  do: "bg-[#030213] text-white",
+                  else: "hover:bg-[#ececea] text-[#717182] hover:text-[#030213]"
+                )
+              ]}
+              phx-click="set_period"
+              phx-value-period={period}
+              data-period={period}
+              data-period-btn
+              data-active={to_string(@period == period)}
+            >
+              {label}
+            </button>
           <% end %>
         </div>
-      <% end %>
+
+        <%!-- Holdings list --%>
+        <%= if @holdings == [] do %>
+          <div class="text-center py-16 text-[#717182]">No holdings found.</div>
+        <% else %>
+          <div class="bg-white border border-black/[.08] rounded-xl overflow-hidden mb-6">
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="border-b border-black/[.06]">
+                  <th class="px-5 py-3 text-left text-xs font-medium text-[#717182] uppercase tracking-wider">
+                    Symbol
+                  </th>
+                  <th class="px-5 py-3 text-left text-xs font-medium text-[#717182] uppercase tracking-wider">
+                    Name
+                  </th>
+                  <th class="px-5 py-3 text-right text-xs font-medium text-[#717182] uppercase tracking-wider">
+                    Shares
+                  </th>
+                  <th class="px-5 py-3 text-right text-xs font-medium text-[#717182] uppercase tracking-wider">
+                    Price
+                  </th>
+                  <th class="px-5 py-3 text-right text-xs font-medium text-[#717182] uppercase tracking-wider">
+                    Value
+                  </th>
+                  <th class="px-5 py-3 text-right text-xs font-medium text-[#717182] uppercase tracking-wider">
+                    Gain/Loss
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-black/[.04]">
+                <%= for holding <- @holdings do %>
+                  <tr data-symbol={holding.symbol} class="hover:bg-[#f8f7f5]/50">
+                    <td class="px-5 py-3 font-mono font-semibold text-[#030213]">{holding.symbol}</td>
+                    <td class="px-5 py-3 text-[#030213]">{holding.name}</td>
+                    <td class="px-5 py-3 font-mono text-right text-[#030213]">
+                      {format_decimal(holding.quantity)}
+                    </td>
+                    <td class="px-5 py-3 font-mono text-right text-[#030213]">
+                      {format_decimal(holding.current_price)}
+                    </td>
+                    <td class="px-5 py-3 font-mono text-right text-[#030213]">
+                      {format_decimal(holding.current_value)}
+                    </td>
+                    <td class={[
+                      "px-5 py-3 font-mono text-right",
+                      gain_loss_class(holding.unrealized_gain_loss)
+                    ]}>
+                      {format_decimal(holding.unrealized_gain_loss)}
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+
+          <%!-- Allocation breakdown --%>
+          <h2 class="text-base font-medium text-[#030213] mb-3">Allocation</h2>
+          <div class="bg-white border border-black/[.08] rounded-xl p-5 space-y-3">
+            <%= for item <- @allocation do %>
+              <div class="flex items-center gap-3">
+                <span class="w-32 text-sm text-[#030213] capitalize">{item.class}</span>
+                <div class="flex-1 bg-[#ececea] rounded h-2">
+                  <div class="bg-[#030213] rounded h-2" style={"width: #{item.pct}%"}></div>
+                </div>
+                <span class="text-sm text-[#717182] w-16 text-right">
+                  {:erlang.float_to_binary(item.pct, decimals: 1)}%
+                </span>
+                <span class="font-mono text-sm text-[#030213] w-24 text-right">
+                  {format_decimal(item.value)}
+                </span>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
     </div>
     """
   end
@@ -156,5 +193,7 @@ defmodule XactionsWeb.PortfolioLive do
   defp format_datetime(%DateTime{} = dt), do: Calendar.strftime(dt, "%b %d %H:%M UTC")
 
   defp gain_loss_class(nil), do: ""
-  defp gain_loss_class(%Decimal{} = d), do: if(Decimal.negative?(d), do: "text-error", else: "text-success")
+
+  defp gain_loss_class(%Decimal{} = d),
+    do: if(Decimal.negative?(d), do: "text-[#d4183d]", else: "text-[#10b981]")
 end

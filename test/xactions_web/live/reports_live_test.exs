@@ -42,4 +42,18 @@ defmodule XactionsWeb.ReportsLiveTest do
       assert html =~ "Net Worth"
     end
   end
+
+  describe "design system" do
+    test "renders net worth summary card", %{conn: conn} do
+      {:ok, view, _html} = live(conn, ~p"/reports")
+      assert has_element?(view, "[data-summary='net-worth']")
+    end
+
+    test "does not use DaisyUI component classes", %{conn: conn} do
+      {:ok, _view, html} = live(conn, ~p"/reports")
+      refute html =~ "stat-title"
+      refute html =~ "stat-value"
+      refute html =~ "btn-ghost"
+    end
+  end
 end

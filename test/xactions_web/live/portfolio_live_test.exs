@@ -42,6 +42,28 @@ defmodule XactionsWeb.PortfolioLiveTest do
     end
   end
 
+  describe "design system" do
+    test "renders summary cards", %{conn: conn} do
+      {:ok, view, _html} = live(conn, ~p"/portfolio")
+      assert has_element?(view, "[data-summary='total-value']")
+      assert has_element?(view, "[data-summary='cost-basis']")
+      assert has_element?(view, "[data-summary='gain-loss']")
+    end
+
+    test "renders period toggle buttons", %{conn: conn} do
+      {:ok, view, _html} = live(conn, ~p"/portfolio")
+      assert has_element?(view, "[data-period-btn]")
+    end
+
+    test "does not use DaisyUI component classes", %{conn: conn} do
+      {:ok, _view, html} = live(conn, ~p"/portfolio")
+      refute html =~ "stat-title"
+      refute html =~ "stat-value"
+      refute html =~ "btn-primary"
+      refute html =~ "btn-ghost"
+    end
+  end
+
   describe "set_period event" do
     test "updates selected period", %{conn: conn} do
       {:ok, view, _html} = live(conn, ~p"/portfolio")

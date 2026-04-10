@@ -63,105 +63,144 @@ defmodule XactionsWeb.ReportsLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <div class="container mx-auto p-6 max-w-4xl">
-      <h1 class="text-2xl font-bold mb-4">Reports</h1>
+    <div class="min-h-screen bg-[#f8f7f5]">
+      <div class="max-w-4xl mx-auto px-6 py-8">
+        <h1 class="text-2xl tracking-tight mb-6">Reports</h1>
 
-      <%!-- Net Worth --%>
-      <div class="stats shadow mb-6">
-        <div class="stat">
-          <div class="stat-title">Net Worth</div>
-          <div class="stat-value text-xl"><%= format_decimal(@net_worth) %></div>
+        <%!-- Net Worth summary card --%>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+          <div data-summary="net-worth" class="bg-white border border-black/[.08] rounded-xl p-5">
+            <div class="text-sm text-[#717182] mb-1">Net Worth</div>
+            <div class="text-3xl tracking-tight">{format_decimal(@net_worth)}</div>
+          </div>
         </div>
-      </div>
 
-      <%!-- Month selector --%>
-      <form phx-submit="select_month" data-form="month-select" class="flex items-end gap-3 mb-6">
-        <div class="form-control">
-          <label class="label-text text-xs">Month</label>
-          <input
-            type="month"
-            name="month"
-            class="input input-bordered input-sm"
-            value={@selected_month_str}
-          />
+        <%!-- Month selector --%>
+        <form phx-submit="select_month" data-form="month-select" class="flex items-end gap-3 mb-6">
+          <div>
+            <label class="block text-xs text-[#717182] mb-1">Month</label>
+            <input
+              type="month"
+              name="month"
+              class="border border-black/[.08] rounded-lg px-3 py-2 text-sm bg-white"
+              value={@selected_month_str}
+            />
+          </div>
+          <button
+            type="submit"
+            class="px-4 py-2 hover:bg-[#ececea] rounded-lg text-sm text-[#717182] hover:text-[#030213] transition-colors"
+          >
+            View
+          </button>
+        </form>
+
+        <div
+          class="text-sm text-[#717182] mb-6"
+          data-selected-month={@selected_month_str}
+        >
+          Showing: {Calendar.strftime(@selected_month, "%B %Y")}
         </div>
-        <button type="submit" class="btn btn-sm btn-ghost">View</button>
-      </form>
 
-      <div
-        class="text-sm text-base-content/60 mb-4"
-        data-selected-month={@selected_month_str}
-      >
-        Showing: <%= Calendar.strftime(@selected_month, "%B %Y") %>
-      </div>
-
-      <%!-- Spending by Envelope --%>
-      <h2 class="text-lg font-semibold mb-2">Spending by Envelope</h2>
-      <%= if @spending_by_envelope == [] do %>
-        <p class="text-base-content/50 mb-4">No envelope data for this month.</p>
-      <% else %>
-        <div class="overflow-x-auto mb-6">
-          <table class="table table-sm">
-            <thead>
-              <tr><th>Envelope</th><th>Spent</th></tr>
-            </thead>
-            <tbody>
-              <%= for row <- @spending_by_envelope do %>
-                <tr>
-                  <td><%= row.envelope_name %></td>
-                  <td class="font-mono"><%= format_decimal(row.spent) %></td>
+        <%!-- Spending by Envelope --%>
+        <h2 class="text-base font-medium text-[#030213] mb-3">Spending by Envelope</h2>
+        <%= if @spending_by_envelope == [] do %>
+          <p class="text-[#717182] mb-6">No envelope data for this month.</p>
+        <% else %>
+          <div class="bg-white border border-black/[.08] rounded-xl overflow-hidden mb-6">
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="border-b border-black/[.06]">
+                  <th class="px-5 py-3 text-left text-xs font-medium text-[#717182] uppercase tracking-wider">
+                    Envelope
+                  </th>
+                  <th class="px-5 py-3 text-right text-xs font-medium text-[#717182] uppercase tracking-wider">
+                    Spent
+                  </th>
                 </tr>
-              <% end %>
-            </tbody>
-          </table>
-        </div>
-      <% end %>
+              </thead>
+              <tbody class="divide-y divide-black/[.04]">
+                <%= for row <- @spending_by_envelope do %>
+                  <tr>
+                    <td class="px-5 py-3 text-[#030213]">{row.envelope_name}</td>
+                    <td class="px-5 py-3 font-mono text-right text-[#030213]">
+                      {format_decimal(row.spent)}
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        <% end %>
 
-      <%!-- Month-over-Month --%>
-      <h2 class="text-lg font-semibold mb-2">Month-over-Month</h2>
-      <%= if @mom_comparison == [] do %>
-        <p class="text-base-content/50 mb-4">No comparison data available.</p>
-      <% else %>
-        <div class="overflow-x-auto mb-6">
-          <table class="table table-sm">
+        <%!-- Month-over-Month --%>
+        <h2 class="text-base font-medium text-[#030213] mb-3">Month-over-Month</h2>
+        <%= if @mom_comparison == [] do %>
+          <p class="text-[#717182] mb-6">No comparison data available.</p>
+        <% else %>
+          <div class="bg-white border border-black/[.08] rounded-xl overflow-hidden mb-6">
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="border-b border-black/[.06]">
+                  <th class="px-5 py-3 text-left text-xs font-medium text-[#717182] uppercase tracking-wider">
+                    Envelope
+                  </th>
+                  <th class="px-5 py-3 text-right text-xs font-medium text-[#717182] uppercase tracking-wider">
+                    This Month
+                  </th>
+                  <th class="px-5 py-3 text-right text-xs font-medium text-[#717182] uppercase tracking-wider">
+                    Last Month
+                  </th>
+                  <th class="px-5 py-3 text-right text-xs font-medium text-[#717182] uppercase tracking-wider">
+                    Change
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-black/[.04]">
+                <%= for row <- @mom_comparison do %>
+                  <tr>
+                    <td class="px-5 py-3 text-[#030213]">{row.envelope_name}</td>
+                    <td class="px-5 py-3 font-mono text-right text-[#030213]">
+                      {format_decimal(row.current)}
+                    </td>
+                    <td class="px-5 py-3 font-mono text-right text-[#030213]">
+                      {format_decimal(row.previous)}
+                    </td>
+                    <td class={["px-5 py-3 font-mono text-right", delta_class(row.delta)]}>
+                      {format_delta(row.delta)}
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        <% end %>
+
+        <%!-- Net Worth History --%>
+        <h2 class="text-base font-medium text-[#030213] mb-3">Net Worth History</h2>
+        <div class="bg-white border border-black/[.08] rounded-xl overflow-hidden">
+          <table class="w-full text-sm">
             <thead>
-              <tr>
-                <th>Envelope</th>
-                <th>This Month</th>
-                <th>Last Month</th>
-                <th>Change</th>
+              <tr class="border-b border-black/[.06]">
+                <th class="px-5 py-3 text-left text-xs font-medium text-[#717182] uppercase tracking-wider">
+                  Month
+                </th>
+                <th class="px-5 py-3 text-right text-xs font-medium text-[#717182] uppercase tracking-wider">
+                  Net Worth
+                </th>
               </tr>
             </thead>
-            <tbody>
-              <%= for row <- @mom_comparison do %>
+            <tbody class="divide-y divide-black/[.04]">
+              <%= for entry <- @net_worth_history do %>
                 <tr>
-                  <td><%= row.envelope_name %></td>
-                  <td class="font-mono"><%= format_decimal(row.current) %></td>
-                  <td class="font-mono"><%= format_decimal(row.previous) %></td>
-                  <td class={["font-mono", delta_class(row.delta)]}>
-                    <%= format_delta(row.delta) %>
+                  <td class="px-5 py-3 text-[#030213]">{Calendar.strftime(entry.month, "%b %Y")}</td>
+                  <td class="px-5 py-3 font-mono text-right text-[#030213]">
+                    {format_decimal(entry.net_worth)}
                   </td>
                 </tr>
               <% end %>
             </tbody>
           </table>
         </div>
-      <% end %>
-
-      <%!-- Net Worth History --%>
-      <h2 class="text-lg font-semibold mb-2">Net Worth History</h2>
-      <div class="overflow-x-auto">
-        <table class="table table-sm">
-          <thead><tr><th>Month</th><th>Net Worth</th></tr></thead>
-          <tbody>
-            <%= for entry <- @net_worth_history do %>
-              <tr>
-                <td><%= Calendar.strftime(entry.month, "%b %Y") %></td>
-                <td class="font-mono"><%= format_decimal(entry.net_worth) %></td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
       </div>
     </div>
     """
@@ -171,11 +210,14 @@ defmodule XactionsWeb.ReportsLive do
   defp format_decimal(%Decimal{} = d), do: "$#{Decimal.to_string(Decimal.round(d, 2))}"
 
   defp format_delta(nil), do: "—"
+
   defp format_delta(%Decimal{} = d) do
     prefix = if Decimal.positive?(d), do: "+", else: ""
     "#{prefix}$#{Decimal.to_string(Decimal.round(d, 2))}"
   end
 
   defp delta_class(nil), do: ""
-  defp delta_class(%Decimal{} = d), do: if(Decimal.positive?(d), do: "text-error", else: "text-success")
+
+  defp delta_class(%Decimal{} = d),
+    do: if(Decimal.positive?(d), do: "text-[#d4183d]", else: "text-[#10b981]")
 end

@@ -30,10 +30,13 @@ defmodule XactionsWeb.MfaLive do
   @impl true
   def handle_event("update_code", %{"id" => id, "code" => code}, socket) do
     id = String.to_integer(id)
-    pending = Enum.map(socket.assigns.pending_mfa, fn
-      {^id, type, _} -> {id, type, code}
-      other -> other
-    end)
+
+    pending =
+      Enum.map(socket.assigns.pending_mfa, fn
+        {^id, type, _} -> {id, type, code}
+        other -> other
+      end)
+
     {:noreply, assign(socket, :pending_mfa, pending)}
   end
 
@@ -54,39 +57,41 @@ defmodule XactionsWeb.MfaLive do
   def render(assigns) do
     ~H"""
     <%= for {institution_id, mfa_type, code} <- @pending_mfa do %>
-      <div class="modal modal-open" id={"mfa-modal-#{institution_id}"}>
-        <div class="modal-box">
-          <h3 class="font-bold text-lg">Two-Factor Authentication</h3>
-          <p class="py-2 text-sm text-base-content/70">
-            <%= mfa_prompt(mfa_type) %>
+      <div
+        class="fixed inset-0 bg-black/40 flex items-center justify-center z-50"
+        id={"mfa-modal-#{institution_id}"}
+        data-mfa-overlay
+      >
+        <div class="bg-white border border-black/[.08] rounded-xl p-6 w-full max-w-sm mx-4">
+          <h3 class="font-medium text-[#030213] text-lg mb-2">Two-Factor Authentication</h3>
+          <p class="text-sm text-[#717182] mb-4">
+            {mfa_prompt(mfa_type)}
           </p>
-          <div class="form-control mt-4">
-            <input
-              type="text"
-              class="input input-bordered"
-              placeholder="Enter code"
-              value={code}
-              phx-keyup="update_code"
-              phx-value-id={institution_id}
-              phx-value-code=""
-              autofocus
-            />
-          </div>
-          <div class="modal-action">
+          <input
+            type="text"
+            class="w-full border border-black/[.08] rounded-lg px-3 py-2 text-sm mb-4"
+            placeholder="Enter code"
+            value={code}
+            phx-keyup="update_code"
+            phx-value-id={institution_id}
+            phx-value-code=""
+            autofocus
+          />
+          <div class="flex gap-2 justify-end">
             <button
-              class="btn btn-primary"
+              class="px-4 py-2 hover:bg-[#ececea] rounded-lg text-sm text-[#717182] hover:text-[#030213] transition-colors"
+              phx-click="dismiss_mfa"
+              phx-value-id={institution_id}
+            >
+              Cancel
+            </button>
+            <button
+              class="px-4 py-2 bg-[#030213] text-white rounded-lg text-sm hover:bg-[#030213]/90 transition-colors"
               phx-click="submit_mfa"
               phx-value-id={institution_id}
               phx-value-code={code}
             >
               Submit
-            </button>
-            <button
-              class="btn btn-ghost"
-              phx-click="dismiss_mfa"
-              phx-value-id={institution_id}
-            >
-              Cancel
             </button>
           </div>
         </div>

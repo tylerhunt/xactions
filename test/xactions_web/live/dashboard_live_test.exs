@@ -45,6 +45,27 @@ defmodule XactionsWeb.DashboardLiveTest do
     end
   end
 
+  describe "design system" do
+    test "renders net worth summary card", %{conn: conn} do
+      {:ok, view, _html} = live(conn, ~p"/")
+      assert has_element?(view, "[data-summary='net-worth']")
+    end
+
+    test "renders sync all button", %{conn: conn} do
+      {:ok, view, _html} = live(conn, ~p"/")
+      assert has_element?(view, "[data-sync-all-btn]")
+    end
+
+    test "does not use DaisyUI component classes", %{conn: conn} do
+      {:ok, _view, html} = live(conn, ~p"/")
+      refute html =~ "stat-title"
+      refute html =~ "stat-value"
+      refute html =~ "btn-ghost"
+      refute html =~ "card-body"
+      refute html =~ "alert-error"
+    end
+  end
+
   describe "PubSub updates" do
     test "updates sync status badge on sync_complete", %{conn: conn} do
       inst = institution!(%{name: "Live Bank"})

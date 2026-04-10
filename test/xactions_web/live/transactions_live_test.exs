@@ -87,7 +87,11 @@ defmodule XactionsWeb.TransactionsLiveTest do
       assert has_element?(view, "[data-txn-id='#{txn.id}'][data-split='true']")
     end
 
-    test "shows error when split amounts don't sum", %{conn: conn, account: account, category: category} do
+    test "shows error when split amounts don't sum", %{
+      conn: conn,
+      account: account,
+      category: category
+    } do
       cat2 = category!(%{name: "Health"})
       txn = transaction!(%{account_id: account.id, amount: Decimal.new("-50.00")})
 
@@ -128,7 +132,11 @@ defmodule XactionsWeb.TransactionsLiveTest do
   end
 
   describe "add_manual_transaction event" do
-    test "adds a transaction to a manual account", %{conn: conn, account: account, category: category} do
+    test "adds a transaction to a manual account", %{
+      conn: conn,
+      account: account,
+      category: category
+    } do
       {:ok, view, _html} = live(conn, ~p"/transactions")
 
       view
@@ -169,6 +177,30 @@ defmodule XactionsWeb.TransactionsLiveTest do
       final_html = render(view)
       final_count = length(Regex.scan(~r/data-merchant=/, final_html))
       assert final_count == 55
+    end
+  end
+
+  describe "design system" do
+    test "add transaction form has data attribute", %{conn: conn} do
+      {:ok, view, _html} = live(conn, ~p"/transactions")
+      view |> element("[phx-click='open_add_transaction']") |> render_click()
+      assert has_element?(view, "[data-add-transaction-form]")
+    end
+
+    test "split badge renders on split transactions", %{conn: conn, account: account} do
+      transaction!(%{account_id: account.id, merchant_name: "Split Store", is_split: true})
+
+      {:ok, view, _html} = live(conn, ~p"/transactions")
+      assert has_element?(view, "[data-split-badge]")
+    end
+
+    test "does not use DaisyUI component classes", %{conn: conn} do
+      {:ok, _view, html} = live(conn, ~p"/transactions")
+      refute html =~ "card-body"
+      refute html =~ "btn-primary"
+      refute html =~ "btn-ghost"
+      refute html =~ "badge-ghost"
+      refute html =~ "badge-xs"
     end
   end
 end

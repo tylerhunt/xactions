@@ -51,7 +51,7 @@ defmodule XactionsWeb.AccountsLiveTest do
       |> form("form[data-form='add-institution']", %{institution: %{name: ""}})
       |> render_submit()
 
-      assert has_element?(view, ".text-error", "can't be blank")
+      assert has_element?(view, "[data-field-error]", "can't be blank")
     end
   end
 
@@ -65,6 +65,17 @@ defmodule XactionsWeb.AccountsLiveTest do
       |> render_click()
 
       refute has_element?(view, "[data-institution-id='#{inst.id}']")
+    end
+  end
+
+  describe "design system" do
+    test "does not use DaisyUI component classes", %{conn: conn} do
+      {:ok, _view, html} = live(conn, ~p"/accounts")
+      refute html =~ "card-body"
+      refute html =~ "card-title"
+      refute html =~ "btn-primary"
+      refute html =~ "btn-ghost"
+      refute html =~ "alert-error"
     end
   end
 

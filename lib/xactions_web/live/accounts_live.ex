@@ -113,103 +113,117 @@ defmodule XactionsWeb.AccountsLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <div class="container mx-auto p-6 max-w-4xl">
-      <div class="flex items-center justify-between mb-6">
-        <h1 class="text-2xl font-bold">Accounts</h1>
-        <button class="btn btn-primary btn-sm" phx-click="add_institution">
-          Add Institution
-        </button>
-      </div>
+    <div class="min-h-screen bg-[#f8f7f5]">
+      <div class="max-w-4xl mx-auto px-6 py-8">
+        <div class="flex items-center justify-between mb-6">
+          <h1 class="text-2xl tracking-tight">Accounts</h1>
+          <button
+            class="px-4 py-2 bg-[#030213] text-white rounded-lg text-sm hover:bg-[#030213]/90 transition-colors"
+            phx-click="add_institution"
+          >
+            Add Institution
+          </button>
+        </div>
 
-      <%= if @show_form do %>
-        <div class="card bg-base-100 border mb-6">
-          <div class="card-body">
-            <h2 class="card-title text-lg">Add Institution</h2>
+        <%= if @show_form do %>
+          <div class="bg-white border border-black/[.08] rounded-xl p-5 mb-6">
+            <h2 class="text-base font-medium text-[#030213] mb-4">Add Institution</h2>
             <.form
               for={@form}
               phx-submit="save_institution"
               data-form="add-institution"
             >
-              <div class="form-control mb-3">
-                <label class="label"><span class="label-text">Name</span></label>
-                <.input field={@form[:name]} type="text" placeholder="Chase, Fidelity…" />
-              </div>
-              <div class="form-control mb-3">
-                <label class="label"><span class="label-text">Sync Method</span></label>
-                <.input
-                  field={@form[:sync_method]}
-                  type="select"
-                  options={[{"Browser (Playwright)", "browser"}, {"OFX Direct Connect", "ofx_direct"}, {"Manual", "manual"}]}
-                />
-              </div>
+              <.input field={@form[:name]} type="text" label="Name" placeholder="Chase, Fidelity…" />
+              <.input
+                field={@form[:sync_method]}
+                type="select"
+                label="Sync Method"
+                options={[
+                  {"Browser (Playwright)", "browser"},
+                  {"OFX Direct Connect", "ofx_direct"},
+                  {"Manual", "manual"}
+                ]}
+              />
               <div class="flex gap-2 mt-4">
-                <button type="submit" class="btn btn-primary btn-sm">Save</button>
-                <button type="button" class="btn btn-ghost btn-sm" phx-click="cancel_form">
+                <button
+                  type="submit"
+                  class="px-4 py-2 bg-[#030213] text-white rounded-lg text-sm hover:bg-[#030213]/90 transition-colors"
+                >
+                  Save
+                </button>
+                <button
+                  type="button"
+                  class="px-4 py-2 hover:bg-[#ececea] rounded-lg text-sm text-[#717182] hover:text-[#030213] transition-colors"
+                  phx-click="cancel_form"
+                >
                   Cancel
                 </button>
               </div>
             </.form>
           </div>
-        </div>
-      <% end %>
+        <% end %>
 
-      <div class="space-y-4">
-        <%= for {institution, accounts} <- @institutions do %>
-          <div
-            class="card bg-base-100 border"
-            data-institution-id={institution.id}
-            data-institution-name={institution.name}
-          >
-            <div class="card-body p-4">
-              <div class="flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                  <h2 class="font-semibold"><%= institution.name %></h2>
-                  <.sync_status_badge status={institution.status} />
-                </div>
-                <div class="flex gap-2">
-                  <%= unless institution.is_manual_only do %>
+        <div class="grid gap-4">
+          <%= for {institution, accounts} <- @institutions do %>
+            <div
+              class="bg-white border border-black/[.08] rounded-xl overflow-hidden"
+              data-institution-id={institution.id}
+              data-institution-name={institution.name}
+            >
+              <div class="px-5 py-4">
+                <div class="flex items-center justify-between mb-3">
+                  <div class="flex items-center gap-3">
+                    <span class="font-medium text-[#030213]">{institution.name}</span>
+                    <.sync_status_badge status={institution.status} />
+                  </div>
+                  <div class="flex gap-1">
+                    <%= unless institution.is_manual_only do %>
+                      <button
+                        class="px-2 py-1 hover:bg-[#ececea] rounded text-xs text-[#717182] hover:text-[#030213] transition-colors"
+                        phx-click="sync_now"
+                        phx-value-id={institution.id}
+                      >
+                        Sync
+                      </button>
+                    <% end %>
                     <button
-                      class="btn btn-ghost btn-xs"
-                      phx-click="sync_now"
+                      class="px-2 py-1 hover:bg-[#ececea] rounded text-xs text-[#d4183d]/70 hover:text-[#d4183d] transition-colors"
+                      phx-click="remove_institution"
                       phx-value-id={institution.id}
+                      data-confirm="Remove this institution and all its data?"
                     >
-                      Sync
+                      Remove
                     </button>
-                  <% end %>
-                  <button
-                    class="btn btn-ghost btn-xs text-error"
-                    phx-click="remove_institution"
-                    phx-value-id={institution.id}
-                    data-confirm="Remove this institution and all its data?"
-                  >
-                    Remove
-                  </button>
+                  </div>
                 </div>
-              </div>
 
-              <%= if institution.status == "credential_error" do %>
-                <div class="alert alert-error alert-sm mt-2" data-reconnect-alert={institution.id}>
-                  <span>Credentials invalid — please update and reconnect.</span>
-                </div>
-              <% end %>
-
-              <div class="mt-2 divide-y divide-base-200">
-                <%= for account <- accounts do %>
+                <%= if institution.status == "credential_error" do %>
                   <div
-                    class="flex items-center justify-between py-2"
-                    data-account-name={account.name}
-                    data-account-id={account.id}
+                    class="border-l-4 border-[#d4183d] bg-[#d4183d]/5 rounded-lg px-4 py-3 text-sm text-[#030213] mb-3"
+                    data-reconnect-alert={institution.id}
                   >
-                    <span class="text-sm"><%= account.name %></span>
-                    <span class="font-mono text-sm">
-                      $<%= Decimal.to_string(Decimal.round(account.balance || Decimal.new("0"), 2)) %>
-                    </span>
+                    Credentials invalid — please update and reconnect.
                   </div>
                 <% end %>
+
+                <div class="divide-y divide-black/[.04]">
+                  <%= for account <- accounts do %>
+                    <div
+                      class="flex items-center justify-between py-2"
+                      data-account-name={account.name}
+                      data-account-id={account.id}
+                    >
+                      <span class="text-sm text-[#030213]">{account.name}</span>
+                      <span class="font-mono text-sm text-[#030213]">
+                        ${Decimal.to_string(Decimal.round(account.balance || Decimal.new("0"), 2))}
+                      </span>
+                    </div>
+                  <% end %>
+                </div>
               </div>
             </div>
-          </div>
-        <% end %>
+          <% end %>
+        </div>
       </div>
     </div>
     """

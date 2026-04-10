@@ -17,8 +17,8 @@ failing (red) before the corresponding implementation tasks begin.
 
 **Purpose**: Verify environment and establish baseline before any changes.
 
-- [ ] T001 Verify `mix test` passes on the current branch (baseline green) in shell
-- [ ] T002 Audit DaisyUI class usage: run `grep -rn "btn\|card-body\|stat-title\|stat-value\|badge-\|alert-\|modal-box\|bg-base\|text-base\|text-error\|text-success" lib/xactions_web/` and save output as reference
+- [X] T001 Verify `mix test` passes on the current branch (baseline green) in shell
+- [X] T002 Audit DaisyUI class usage: run `grep -rn "btn\|card-body\|stat-title\|stat-value\|badge-\|alert-\|modal-box\|bg-base\|text-base\|text-error\|text-success" lib/xactions_web/` and save output as reference
 
 ---
 
@@ -28,9 +28,9 @@ failing (red) before the corresponding implementation tasks begin.
 These have no dedicated test files — they are validated by the page-level tests
 in Phases 3–7. Complete this phase before any page-level work.
 
-- [ ] T003 Restyle `lib/xactions_web/components/sync_status_badge.ex` — replace all `badge badge-*` classes with pill pattern: `text-xs font-medium px-2 py-0.5 rounded-full` + semantic `bg-[COLOR]/10 text-[COLOR]` per status (see research.md Decision 6)
-- [ ] T004 Restyle `lib/xactions_web/components/account_card.ex` — replace `hover:bg-base-200` with `hover:bg-[#ececea]/50`, `text-base-content/50` with `text-[#717182]`, `text-error` with `text-[#d4183d]`, `text-success` with `text-[#10b981]`
-- [ ] T005 Restyle `lib/xactions_web/components/core_components.ex` — update `flash/1` (remove `toast`, `alert`, `alert-info`, `alert-error` DaisyUI classes; use fixed-position toast container with left-border colored inner div per research.md Decision 5), `button/1` (remove `btn`, `btn-primary`, `btn-soft`; use primary/ghost Tailwind classes per research.md Decision 2), and `input/1` base classes (use `w-full border border-black/[.08] rounded-lg px-3 py-2 text-sm` per research.md Decision 4)
+- [X] T003 Restyle `lib/xactions_web/components/sync_status_badge.ex` — replace all `badge badge-*` classes with pill pattern: `text-xs font-medium px-2 py-0.5 rounded-full` + semantic `bg-[COLOR]/10 text-[COLOR]` per status (see research.md Decision 6)
+- [X] T004 Restyle `lib/xactions_web/components/account_card.ex` — replace `hover:bg-base-200` with `hover:bg-[#ececea]/50`, `text-base-content/50` with `text-[#717182]`, `text-error` with `text-[#d4183d]`, `text-success` with `text-[#10b981]`
+- [X] T005 Restyle `lib/xactions_web/components/core_components.ex` — update `flash/1` (remove `toast`, `alert`, `alert-info`, `alert-error` DaisyUI classes; use fixed-position toast container with left-border colored inner div per research.md Decision 5), `button/1` (remove `btn`, `btn-primary`, `btn-soft`; use primary/ghost Tailwind classes per research.md Decision 2), and `input/1` base classes (use `w-full border border-black/[.08] rounded-lg px-3 py-2 text-sm` per research.md Decision 4)
 
 **Checkpoint**: All shared components updated. Begin page-level work.
 
@@ -44,7 +44,7 @@ in Phases 3–7. Complete this phase before any page-level work.
 
 ### Tests (write first — confirm red before T007)
 
-- [ ] T006 Write failing LiveView tests for dashboard restyling in `test/xactions_web/live/dashboard_live_test.exs`:
+- [X] T006 Write failing LiveView tests for dashboard restyling in `test/xactions_web/live/dashboard_live_test.exs`:
   - Add test: `[data-summary="net-worth"]` element is present
   - Add test: `[data-sync-all-btn]` element is present
   - Add test: rendered HTML does not contain `"stat-title"`, `"stat-value"`, `"btn-ghost"`, `"card-body"`, `"alert-error"`
@@ -52,7 +52,7 @@ in Phases 3–7. Complete this phase before any page-level work.
 
 ### Implementation
 
-- [ ] T007 [US1] Restyle `lib/xactions_web/live/dashboard_live.ex`:
+- [X] T007 [US1] Restyle `lib/xactions_web/live/dashboard_live.ex`:
   - Add `data-summary="net-worth"` to net worth stat block; replace `stat`/`stat-title`/`stat-value` with summary card pattern: `bg-white border border-black/[.08] rounded-xl p-5`, label `text-sm text-[#717182] mb-1`, value `text-3xl tracking-tight`
   - Add `data-sync-all-btn` to Sync All button; replace `btn btn-ghost btn-sm` with ghost button pattern
   - Replace `card bg-base-100 border` / `card-body` institution containers with `bg-white border border-black/[.08] rounded-xl` / `p-4`
@@ -73,7 +73,7 @@ in Phases 3–7. Complete this phase before any page-level work.
 
 ### Tests (write first — confirm red before T009)
 
-- [ ] T008 Write failing LiveView tests for transactions restyling in `test/xactions_web/live/transactions_live_test.exs`:
+- [X] T008 Write failing LiveView tests for transactions restyling in `test/xactions_web/live/transactions_live_test.exs`:
   - Add test: `[data-add-transaction-form]` element appears after clicking add button
   - Add test: `[data-split-badge]` is present on a split transaction row
   - Add test: rendered HTML does not contain `"card-body"`, `"btn-primary"`, `"btn-ghost"`, `"badge-ghost"`, `"badge-xs"`
@@ -81,7 +81,7 @@ in Phases 3–7. Complete this phase before any page-level work.
 
 ### Implementation
 
-- [ ] T009 [US2] Restyle `lib/xactions_web/live/transactions_live.ex`:
+- [X] T009 [US2] Restyle `lib/xactions_web/live/transactions_live.ex`:
   - Add `data-add-transaction-form` to the add-transaction form container
   - Add `data-split-badge` to the "split" badge span
   - Replace `card bg-base-100 border` / `card-body` with white panel pattern
@@ -102,14 +102,14 @@ in Phases 3–7. Complete this phase before any page-level work.
 
 ### Tests (write first — confirm red before T011)
 
-- [ ] T010 Update failing LiveView tests for accounts restyling in `test/xactions_web/live/accounts_live_test.exs`:
+- [X] T010 Update failing LiveView tests for accounts restyling in `test/xactions_web/live/accounts_live_test.exs`:
   - Update the existing `".text-error"` selector (line ~54) to `"[data-field-error]"` or the raw Tailwind text color class to avoid coupling to DaisyUI class names
   - Add test: rendered HTML does not contain `"card-body"`, `"card-title"`, `"btn-primary"`, `"btn-ghost"`, `"alert-error"`
   - Confirm tests fail (red) — `mix test test/xactions_web/live/accounts_live_test.exs`
 
 ### Implementation
 
-- [ ] T011 [US3] Restyle `lib/xactions_web/live/accounts_live.ex`:
+- [X] T011 [US3] Restyle `lib/xactions_web/live/accounts_live.ex`:
   - Replace `card bg-base-100 border` / `card-body` / `card-title` with white panel pattern; section headings use `font-medium text-[#030213]`
   - Replace `btn btn-primary btn-sm` with primary button; `btn btn-ghost btn-sm/btn-xs` with ghost/danger button patterns
   - Replace `alert alert-error alert-sm` reconnect banner with error left-border banner (keep `data-reconnect-alert` attribute)
@@ -128,20 +128,20 @@ in Phases 3–7. Complete this phase before any page-level work.
 
 ### Tests (write first — confirm red before T013 and T014)
 
-- [ ] T012 Write failing LiveView tests for portfolio and reports restyling:
+- [X] T012 Write failing LiveView tests for portfolio and reports restyling:
   - In `test/xactions_web/live/portfolio_live_test.exs`: add tests for `[data-summary="total-value"]`, `[data-summary="cost-basis"]`, `[data-summary="gain-loss"]`, `[data-period-btn]`; assert rendered HTML does not contain `"stat-title"`, `"stat-value"`, `"btn-primary"`, `"btn-ghost"`
   - In `test/xactions_web/live/reports_live_test.exs`: add test for `[data-summary="net-worth"]`; assert rendered HTML does not contain `"stat-title"`, `"stat-value"`, `"btn-ghost"`
   - Confirm tests fail (red) — `mix test test/xactions_web/live/portfolio_live_test.exs test/xactions_web/live/reports_live_test.exs`
 
 ### Implementation
 
-- [ ] T013 [P] [US4] Restyle `lib/xactions_web/live/portfolio_live.ex`:
+- [X] T013 [P] [US4] Restyle `lib/xactions_web/live/portfolio_live.ex`:
   - Replace `stat`/`stat-title`/`stat-value` blocks with summary card grid; add `data-summary="total-value"`, `data-summary="cost-basis"`, `data-summary="gain-loss"` attributes
   - Replace period toggle `btn btn-xs btn-primary / btn-ghost` with toggle pattern: active `px-3 py-1.5 rounded-lg text-sm bg-[#ececea] text-[#030213]`, inactive `px-3 py-1.5 rounded-lg text-sm text-[#717182] hover:bg-[#ececea]/50 transition-colors`; add `data-period-btn` to each
   - Replace `alert alert-warning` stale price banner with warning left-border banner (keep `data-price-stale` attribute)
   - Set root container to `min-h-screen bg-[#f8f7f5]`
 
-- [ ] T014 [P] [US4] Restyle `lib/xactions_web/live/reports_live.ex`:
+- [X] T014 [P] [US4] Restyle `lib/xactions_web/live/reports_live.ex`:
   - Replace `stat`/`stat-title`/`stat-value` net worth block with summary card; add `data-summary="net-worth"` attribute
   - Replace `btn btn-sm btn-ghost` with ghost button pattern
   - Add `data-report-form` to the date range form
@@ -160,20 +160,20 @@ in Phases 3–7. Complete this phase before any page-level work.
 
 ### Tests (write first — confirm red before T016 and T017)
 
-- [ ] T015 Write failing LiveView tests for login and MFA restyling:
+- [X] T015 Write failing LiveView tests for login and MFA restyling:
   - Create `test/xactions_web/live/login_live_test.exs`: test for `[data-login-card]` and `[data-login-form]`; assert rendered HTML does not contain `"card-body"`, `"bg-base-100"`, `"btn-primary"`, `"shadow-xl"`
   - Add MFA overlay test to `test/xactions_web/live/accounts_live_test.exs` or a new `mfa_live_test.exs`: verify `[data-mfa-overlay]` and `[data-mfa-form]` are present when MFA is triggered; assert no `"modal-box"`, `"modal-action"`, `"btn-primary"`, `"btn-ghost"`
   - Confirm tests fail (red)
 
 ### Implementation
 
-- [ ] T016 [P] [US5] Restyle `lib/xactions_web/live/auth/login_live.ex`:
+- [X] T016 [P] [US5] Restyle `lib/xactions_web/live/auth/login_live.ex` and `lib/xactions_web/controllers/session_html/new.html.heex`:
   - Add `data-login-card` to the outer card container and `data-login-form` to the `<form>` element
   - Replace `card w-96 bg-base-100 shadow-xl` / `card-body` with `bg-white border border-black/[.08] rounded-xl p-8 w-full max-w-sm` (center with `flex min-h-screen items-center justify-center bg-[#f8f7f5]`)
   - Replace `btn btn-primary w-full` with primary button `w-full`
   - Ensure input fields use the standard input style
 
-- [ ] T017 [P] [US5] Restyle `lib/xactions_web/live/mfa_live.ex`:
+- [X] T017 [P] [US5] Restyle `lib/xactions_web/live/mfa_live.ex`:
   - Add `data-mfa-overlay` to the outer overlay container and `data-mfa-form` to the form
   - Replace `modal modal-open` / `modal-box` / `modal-action` with fixed overlay pattern: `fixed inset-0 bg-black/30 flex items-center justify-center z-50` outer, `bg-white border border-black/[.08] rounded-xl p-6 w-full max-w-md` inner card
   - Replace `btn btn-primary` / `btn btn-ghost` with primary / ghost button patterns
@@ -185,8 +185,8 @@ in Phases 3–7. Complete this phase before any page-level work.
 
 ## Phase 8: Polish & Cross-Cutting Concerns
 
-- [ ] T018 [P] Run `mix test` — confirm full suite green; fix any regressions
-- [ ] T019 [P] Run `mix format` on all modified files
+- [X] T018 [P] Run `mix test` — confirm full suite green; fix any regressions
+- [X] T019 [P] Run `mix format` on all modified files
 - [ ] T020 Verify `bg-[#f8f7f5]` root container is applied consistently on all pages (dashboard, accounts, transactions, portfolio, reports)
 - [ ] T021 Manual smoke test: start server with `mix phx.server`, visit each page, confirm no invisible text or DaisyUI-specific styling artifacts
 

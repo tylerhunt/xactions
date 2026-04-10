@@ -26,27 +26,30 @@ defmodule XactionsWeb.LoginLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <div class="min-h-screen flex items-center justify-center bg-base-200">
-      <div class="card w-96 bg-base-100 shadow-xl">
-        <div class="card-body">
-          <h2 class="card-title text-2xl">xactions</h2>
-          <p class="text-base-content/70">Sign in to continue</p>
-          <.form for={@form} phx-submit="submit" class="mt-4 space-y-4">
-            <div class="form-control">
-              <label class="label"><span class="label-text">Password</span></label>
-              <input
-                type="password"
-                name="password"
-                class="input input-bordered w-full"
-                autofocus
-              />
-            </div>
-            <%= if @error do %>
-              <p class="text-error text-sm"><%= @error %></p>
-            <% end %>
-            <button type="submit" class="btn btn-primary w-full">Sign In</button>
-          </.form>
-        </div>
+    <div class="min-h-screen flex items-center justify-center bg-[#f8f7f5]">
+      <div class="bg-white border border-black/[.08] rounded-xl p-8 w-full max-w-sm" data-login-card>
+        <h2 class="text-2xl tracking-tight text-[#030213] mb-1">xactions</h2>
+        <p class="text-sm text-[#717182] mb-6">Sign in to continue</p>
+        <.form for={@form} phx-submit="submit" data-login-form>
+          <div class="mb-4">
+            <label class="block text-xs text-[#717182] mb-1">Password</label>
+            <input
+              type="password"
+              name="password"
+              class="w-full border border-black/[.08] rounded-lg px-3 py-2 text-sm"
+              autofocus
+            />
+          </div>
+          <%= if @error do %>
+            <p class="text-[#d4183d] text-sm mb-4">{@error}</p>
+          <% end %>
+          <button
+            type="submit"
+            class="w-full px-4 py-2 bg-[#030213] text-white rounded-lg text-sm hover:bg-[#030213]/90 transition-colors"
+          >
+            Sign In
+          </button>
+        </.form>
       </div>
     </div>
     """

@@ -9,16 +9,16 @@ defmodule XactionsWeb.Components.AccountCard do
   def account_card(assigns) do
     ~H"""
     <div
-      class="flex items-center justify-between py-2 px-3 rounded hover:bg-base-200"
+      class="flex items-center justify-between py-2 px-3 rounded hover:bg-[#ececea]/50"
       data-account-name={@account.name}
       data-account-id={@account.id}
     >
       <div>
-        <span class="font-medium text-sm"><%= @account.name %></span>
-        <span class="text-xs text-base-content/50 ml-2"><%= account_type_label(@account.type) %></span>
+        <span class="font-medium text-sm">{@account.name}</span>
+        <span class="text-xs text-[#717182] ml-2">{account_type_label(@account.type)}</span>
       </div>
       <span class={balance_class(@account)} data-account-balance={@account.id}>
-        <%= format_balance(@account.balance) %>
+        {format_balance(@account.balance)}
       </span>
     </div>
     """
@@ -33,10 +33,12 @@ defmodule XactionsWeb.Components.AccountCard do
   defp account_type_label(t), do: t
 
   defp balance_class(%{type: type}) when type in ~w(credit_card loan mortgage),
-    do: "font-mono text-sm text-error"
-  defp balance_class(_), do: "font-mono text-sm text-success"
+    do: "font-mono text-sm text-[#d4183d]"
+
+  defp balance_class(_), do: "font-mono text-sm text-[#10b981]"
 
   defp format_balance(nil), do: "$0.00"
+
   defp format_balance(balance) do
     "$#{Decimal.to_string(Decimal.round(balance, 2))}"
   end
