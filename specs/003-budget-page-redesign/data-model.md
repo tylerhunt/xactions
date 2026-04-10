@@ -17,20 +17,20 @@ budget_envelopes
 ```
 
 **Validation**: `color` must match `~r/^#[0-9a-fA-F]{6}$/` when present.
-It is nullable at the DB level; the context assigns a palette color on
-creation if not provided.
+Nullable at the DB level; context assigns a palette color on creation if
+not provided.
 
 **Default palette** (assigned cyclically by total envelope count at creation):
 
 ```
-#10b981  emerald
-#3b82f6  blue
-#f59e0b  amber
-#ec4899  pink
-#8b5cf6  violet
-#06b6d4  cyan
-#14b8a6  teal
-#f97316  orange
+"#10b981"  emerald
+"#3b82f6"  blue
+"#f59e0b"  amber
+"#ec4899"  pink
+"#8b5cf6"  violet
+"#06b6d4"  cyan
+"#14b8a6"  teal
+"#f97316"  orange
 ```
 
 ---
@@ -39,13 +39,13 @@ creation if not provided.
 
 All other data requirements are met by existing tables:
 
-| Requirement           | Existing source                         |
-|-----------------------|-----------------------------------------|
-| Monthly income        | `transactions` filtered by income category + month |
-| Total allocated       | `budget_months.allocated_amount` summed by month   |
-| Per-envelope spent    | `transactions` filtered by envelope's categories + month |
-| Per-envelope balance  | computed: `allocated - spent`            |
-| Month navigation      | `budget_months` already keyed by `month` + `year` integers |
+| Requirement           | Existing source                                              |
+|-----------------------|--------------------------------------------------------------|
+| Monthly income        | `transactions` filtered by income category + month          |
+| Total allocated       | `budget_months.allocated_amount` summed by month            |
+| Per-envelope spent    | `transactions` filtered by envelope's categories + month    |
+| Per-envelope balance  | computed: `allocated - spent`                               |
+| Month navigation      | `budget_months` already keyed by `month` + `year` integers  |
 
 ---
 
@@ -61,20 +61,22 @@ def total_income(%Date{} = date) :: Decimal.t()
 
 @doc "Returns total allocated amount across all active envelopes for the month."
 def total_allocated(%Date{} = date) :: Decimal.t()
+```
 
+### New public function
+
+```elixir
 @doc "Returns total spent across all active envelopes for the month."
 def total_spent(%Date{} = date) :: Decimal.t()
 ```
 
-These three functions replace the inline TBB-only computation in `BudgetLive`
-and enable the four summary cards.
-
-### Updated
+### Updated changeset
 
 ```elixir
 # BudgetEnvelope.changeset/2
-# Adds :color to cast fields; validates format when present.
-# Assigns default palette color if color is nil on insert.
+# Adds :color to cast fields.
+# Validates hex format when present.
+# Assigns a default palette color on insert if color is nil.
 ```
 
 ### New migration

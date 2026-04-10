@@ -19,10 +19,9 @@ palette covers the expected envelope count; assignment wraps cyclically.
 
 ## Decision 2: Month Navigation Strategy
 
-**Decision**: Store the selected month as `{year, month}` integer assigns in
-the LiveView socket. Navigation events (`prev_month`, `next_month`) increment
-or decrement the date using `Date.shift/2` and reload budget data. No URL
-params needed for MVP.
+**Decision**: Store the selected month as a `%Date{}` assign in the LiveView
+socket. Navigation events (`prev_month`, `next_month`) shift the date using
+`Date.shift/2` and reload budget data. No URL params needed for MVP.
 
 **Rationale**: All data fetches are already scoped to a `%Date{}` passed to
 `Budgeting.list_envelopes/1` and `Budgeting.to_be_budgeted/1`. Switching
@@ -32,89 +31,111 @@ LiveView handles the diff patch; no full reload occurs.
 **Alternatives considered**:
 - URL query params (`?month=2026-03`): better bookmarking, but adds routing
   complexity not needed for a personal-use app.
-- Separate LiveView per month: unnecessary complexity.
 
 ---
 
 ## Decision 3: Monthly Income Source for Summary Cards
 
-**Decision**: The "Monthly Income" card sources its value from
-`Budgeting.to_be_budgeted/1` by also exposing `total_income/1` as a public
-context function. Today `total_income` is private; it is promoted to public.
+**Decision**: Promote `total_income/1` and `total_allocated/1` from private to
+public in `Xactions.Budgeting`, and add `total_spent/1` as a new public
+function summing per-envelope spending for the month.
 
-**Rationale**: The summary cards need four values: income, allocated, spent,
-unallocated. Income and allocated already exist as private helpers; spent is
-computed per-envelope. A small refactor exposes these without changing the
-underlying query logic.
+**Rationale**: The summary cards need four values. These are simple query
+extractions; no new logic is introduced. Promoting them keeps the LiveView
+clean — it calls context functions rather than computing figures inline.
 
 **Alternatives considered**:
 - Compute income from envelope spending totals: incorrect — income is tracked
   separately via income-category transactions.
-- Duplicate the query inline in the LiveView: violates context boundary.
+- Duplicate query inline in LiveView: violates context boundary.
 
 ---
 
 ## Decision 4: Inline Budget Editing Mechanism
 
-**Decision**: Click-to-edit using a LiveView JS `push` event that sets
+**Decision**: Click-to-edit using a LiveView event that sets
 `editing_envelope_id` as a socket assign, toggling between a display span and
-an `<input>`. On blur or Enter, `set_allocation` fires the existing event.
+a `<form>/<input>`. On blur or Enter, `set_allocation` fires the existing
+event. No JavaScript required.
 
-**Rationale**: The existing `set_allocation` event and `Budgeting.set_allocation/3`
-function already handle persistence correctly. The only change is in the UI:
-replace the always-visible form with a click-activated input. No new
-server-side logic needed.
+**Rationale**: The existing `set_allocation` event already handles persistence.
+Only the UI changes: a click-activated input replaces the always-visible form.
 
 **Alternatives considered**:
-- LiveView `JS.toggle` with hidden classes: fragile with form submission.
-- Separate LiveComponent for editing: adds indirection for a simple toggle.
+- LiveView JS `push` client-side toggle: adds unnecessary JS complexity for
+  a state change that the server handles fine.
 
 ---
 
-## Decision 5: Global Style Approach
+## Decision 5: DaisyUI — Retain Installation, Stop Using in New Code
 
-**Decision**: Update the DaisyUI `light` theme in `app.css` to match the
-Figma color tokens, and update `layouts.ex` navbar to add `sticky top-0`,
-`backdrop-blur-sm`, and a semi-transparent background. Existing DaisyUI
-component classes are retained on pages that already use them; the budget page
-HTML is rewritten to the new table layout without DaisyUI card classes.
+**Decision**: DaisyUI remains installed (other pages depend on it), but **zero
+DaisyUI classes are used in any new code for this feature**. The redesigned
+`budget_live.ex` and `layouts.ex` navbar use raw Tailwind only. The DaisyUI
+light/dark theme tokens in `app.css` are not modified.
 
-**Rationale**: The Figma design uses semantic color tokens (background,
-card, border, muted-foreground) that map cleanly to DaisyUI's theme variables.
-Updating the theme values propagates consistently across all pages without
-touching each page individually. The navbar change is a two-line edit to
-`layouts.ex`.
+**Rationale**: The Figma design uses no DaisyUI patterns. Fighting DaisyUI's
+opinionated component styles (`btn`, `card`, `stats`, `badge`) to match the
+design creates more work than just not using them. Modifying the DaisyUI theme
+tokens would affect all existing pages, which are not in scope for this
+feature. The clean separation is:
 
-**Color token mapping**:
-| Figma token          | Figma value           | DaisyUI variable       |
-|----------------------|-----------------------|------------------------|
-| background           | `#f8f7f5`             | `--color-base-100`     |
-| card                 | `#ffffff`             | component-level class  |
-| muted                | `#ececea`             | `--color-base-200`     |
-| muted-foreground     | `#717182`             | `--color-base-content` (at 60%) |
-| destructive          | `#d4183d`             | `--color-error`        |
-| primary              | `#030213`             | `--color-primary`      |
-| border               | `rgba(0,0,0,0.08)`    | `--color-base-300`     |
+- New code (budget page + navbar) → raw Tailwind + inline styles for
+  per-envelope colors
+- Existing code (all other pages) → DaisyUI unchanged
+
+A follow-on feature should migrate the remaining pages away from DaisyUI and
+uninstall it, but that is out of scope here.
 
 **Alternatives considered**:
-- Introduce a separate CSS layer parallel to DaisyUI: unnecessary complexity,
-  would require maintaining two theme systems.
-- Port all pages to raw Tailwind without DaisyUI: large scope, out of bounds
-  for this feature.
+- Override DaisyUI light theme tokens to match Figma: affects all pages,
+  causes visual inconsistency during a partial migration.
+- Remove DaisyUI now and rewrite all pages: correct long-term, but triples
+  the scope of this feature.
+- Keep using DaisyUI on the budget page with heavy overrides: produces brittle
+  CSS and still doesn't match the design.
 
 ---
 
-## Decision 6: Progress Bar Animation
+## Decision 6: Color Token Strategy (No DaisyUI Theme Changes)
 
-**Decision**: CSS `transition-[width]` on the progress bar element,
-driven by the inline `style` attribute set during render. No JS library.
+**Decision**: Define the Figma palette as a lightweight CSS layer in `app.css`
+under a `.xui` prefix (or use Tailwind arbitrary values directly in templates).
+These tokens are scoped to new components and do not touch DaisyUI variables.
+
+**Token list** (used via Tailwind arbitrary values or class utilities):
+
+| Purpose              | Value         | Usage                                  |
+|----------------------|---------------|----------------------------------------|
+| Page background      | `#f8f7f5`     | `bg-[#f8f7f5]` on root container       |
+| Card surface         | `#ffffff`     | `bg-white` (already in Tailwind)       |
+| Muted background     | `#ececea`     | `bg-[#ececea]`                         |
+| Muted text           | `#717182`     | `text-[#717182]`                       |
+| Border               | `rgba(0,0,0,0.08)` | `border border-black/[.08]`       |
+| Overspent / error    | `#d4183d`     | inline `style` for dynamic coloring    |
+| Positive balance     | `#10b981`     | inline `style` for dynamic coloring    |
+| Primary (near-black) | `#030213`     | `text-[#030213]`, `bg-[#030213]`       |
+
+Dynamic values (overspent vs. positive) use inline `style` attributes since
+Tailwind cannot generate arbitrary values from runtime data.
+
+**Rationale**: Arbitrary values are a first-class Tailwind feature and keep
+the color definitions co-located with the HTML rather than hidden in a CSS
+file. No new CSS layer is needed.
+
+---
+
+## Decision 7: Progress Bar Animation
+
+**Decision**: CSS `transition-[width] duration-500` on the progress bar's
+inner `div`, driven by the inline `style` attribute set during render.
 
 **Rationale**: The Figma prototype uses Framer Motion (React), which is not
-available in LiveView. A CSS transition on the `width` property achieves the
-same visual effect without any additional dependency. LiveView's DOM diffing
-will trigger the transition when the percentage changes.
+available in LiveView. CSS transitions on `width` achieve the same effect with
+no additional dependency. LiveView's DOM diffing triggers the transition when
+the percentage changes or on page load.
 
 **Alternatives considered**:
-- Alpine.js `x-transition`: adds a dependency for a simple width animation.
-- No animation: acceptable fallback if the CSS approach proves flaky, but
-  the CSS approach is standard and reliable.
+- Alpine.js `x-transition`: adds a dependency for a trivial animation.
+- No animation: acceptable fallback, but the CSS approach is standard and
+  reliable.
