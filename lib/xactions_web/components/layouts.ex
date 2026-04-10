@@ -29,14 +29,20 @@ defmodule XactionsWeb.Layouts do
           <.link navigate={~p"/portfolio"} class={nav_link_class("/portfolio", @current_path)}>Portfolio</.link>
           <.link navigate={~p"/budget"} class={nav_link_class("/budget", @current_path)}>Budget</.link>
           <.link navigate={~p"/reports"} class={nav_link_class("/reports", @current_path)}>Reports</.link>
-          <.link href={~p"/logout"} method="delete" class="btn btn-ghost btn-sm">Sign Out</.link>
         </div>
-        <%!-- Mobile hamburger --%>
+        <%!-- User menu (desktop + mobile) --%>
+        <div class="dropdown dropdown-end">
+          <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
+            <.icon name="hero-user-circle" class="size-6" />
+          </div>
+          <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 mt-3 w-40 p-2 shadow">
+            <li><.link href={~p"/logout"} method="delete">Sign Out</.link></li>
+          </ul>
+        </div>
+        <%!-- Mobile nav hamburger --%>
         <div class="dropdown dropdown-end sm:hidden">
-          <div tabindex="0" role="button" class="btn btn-ghost">
-            <svg xmlns="http://www.w3.org/2000/svg" class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
+          <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
+            <.icon name="hero-bars-3" class="size-5" />
           </div>
           <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 mt-3 w-52 p-2 shadow">
             <li><.link navigate={~p"/"} class={nav_link_class("/", @current_path)}>Dashboard</.link></li>
@@ -45,7 +51,6 @@ defmodule XactionsWeb.Layouts do
             <li><.link navigate={~p"/portfolio"} class={nav_link_class("/portfolio", @current_path)}>Portfolio</.link></li>
             <li><.link navigate={~p"/budget"} class={nav_link_class("/budget", @current_path)}>Budget</.link></li>
             <li><.link navigate={~p"/reports"} class={nav_link_class("/reports", @current_path)}>Reports</.link></li>
-            <li><.link href={~p"/logout"} method="delete">Sign Out</.link></li>
           </ul>
         </div>
       </div>
