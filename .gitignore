@@ -6,6 +6,7 @@
 /cover/
 /deps/
 /doc/
+erl_crash.dump
 
 # Test coverage
 /cover/
