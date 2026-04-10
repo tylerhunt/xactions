@@ -16,45 +16,100 @@ defmodule XactionsWeb.Layouts do
 
   def app(assigns) do
     ~H"""
-    <div class="navbar bg-base-100">
-      <div class="navbar-start">
-        <.link navigate={~p"/"} class="btn btn-ghost text-xl">xactions</.link>
-      </div>
-      <div class="navbar-end">
+    <header
+      data-navbar
+      class="sticky top-0 z-10 border-b border-black/[.08] bg-white/80 backdrop-blur-sm"
+    >
+      <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        <.link navigate={~p"/"} class="text-xl tracking-tight text-[#030213] font-medium">
+          xactions
+        </.link>
         <%!-- Desktop nav --%>
         <div class="hidden sm:flex items-center gap-1">
           <.link navigate={~p"/"} class={nav_link_class("/", @current_path)}>Dashboard</.link>
-          <.link navigate={~p"/accounts"} class={nav_link_class("/accounts", @current_path)}>Accounts</.link>
-          <.link navigate={~p"/transactions"} class={nav_link_class("/transactions", @current_path)}>Transactions</.link>
-          <.link navigate={~p"/portfolio"} class={nav_link_class("/portfolio", @current_path)}>Portfolio</.link>
-          <.link navigate={~p"/budget"} class={nav_link_class("/budget", @current_path)}>Budget</.link>
-          <.link navigate={~p"/reports"} class={nav_link_class("/reports", @current_path)}>Reports</.link>
+          <.link navigate={~p"/accounts"} class={nav_link_class("/accounts", @current_path)}>
+            Accounts
+          </.link>
+          <.link navigate={~p"/transactions"} class={nav_link_class("/transactions", @current_path)}>
+            Transactions
+          </.link>
+          <.link navigate={~p"/portfolio"} class={nav_link_class("/portfolio", @current_path)}>
+            Portfolio
+          </.link>
+          <.link navigate={~p"/budget"} class={nav_link_class("/budget", @current_path)}>
+            Budget
+          </.link>
+          <.link navigate={~p"/reports"} class={nav_link_class("/reports", @current_path)}>
+            Reports
+          </.link>
         </div>
-        <%!-- User menu (desktop + mobile) --%>
-        <div class="dropdown dropdown-end">
-          <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
-            <.icon name="hero-user-circle" class="size-6" />
+        <div class="flex items-center gap-2">
+          <%!-- User menu --%>
+          <div class="relative" id="user-menu" phx-hook="Dropdown">
+            <button
+              class="p-2 rounded-lg hover:bg-[#ececea] transition-colors"
+              id="user-menu-btn"
+              phx-click={JS.toggle(to: "#user-menu-dropdown")}
+            >
+              <.icon name="hero-user-circle" class="size-6 text-[#717182]" />
+            </button>
+            <div
+              id="user-menu-dropdown"
+              class="hidden absolute right-0 mt-1 w-40 bg-white border border-black/[.08] rounded-xl shadow-lg z-20 py-1"
+            >
+              <.link
+                href={~p"/logout"}
+                method="delete"
+                class="block px-4 py-2 text-sm text-[#717182] hover:text-[#030213] hover:bg-[#ececea]/50 transition-colors"
+              >
+                Sign Out
+              </.link>
+            </div>
           </div>
-          <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 mt-3 w-40 p-2 shadow">
-            <li><.link href={~p"/logout"} method="delete">Sign Out</.link></li>
-          </ul>
-        </div>
-        <%!-- Mobile nav hamburger --%>
-        <div class="dropdown dropdown-end sm:hidden">
-          <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
-            <.icon name="hero-bars-3" class="size-5" />
+          <%!-- Mobile nav hamburger --%>
+          <div class="sm:hidden relative" id="mobile-menu">
+            <button
+              class="p-2 rounded-lg hover:bg-[#ececea] transition-colors"
+              phx-click={JS.toggle(to: "#mobile-menu-dropdown")}
+            >
+              <.icon name="hero-bars-3" class="size-5 text-[#717182]" />
+            </button>
+            <div
+              id="mobile-menu-dropdown"
+              class="hidden absolute right-0 mt-1 w-52 bg-white border border-black/[.08] rounded-xl shadow-lg z-20 py-1"
+            >
+              <.link navigate={~p"/"} class={mobile_nav_link_class("/", @current_path)}>
+                Dashboard
+              </.link>
+              <.link
+                navigate={~p"/accounts"}
+                class={mobile_nav_link_class("/accounts", @current_path)}
+              >
+                Accounts
+              </.link>
+              <.link
+                navigate={~p"/transactions"}
+                class={mobile_nav_link_class("/transactions", @current_path)}
+              >
+                Transactions
+              </.link>
+              <.link
+                navigate={~p"/portfolio"}
+                class={mobile_nav_link_class("/portfolio", @current_path)}
+              >
+                Portfolio
+              </.link>
+              <.link navigate={~p"/budget"} class={mobile_nav_link_class("/budget", @current_path)}>
+                Budget
+              </.link>
+              <.link navigate={~p"/reports"} class={mobile_nav_link_class("/reports", @current_path)}>
+                Reports
+              </.link>
+            </div>
           </div>
-          <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 mt-3 w-52 p-2 shadow">
-            <li><.link navigate={~p"/"} class={nav_link_class("/", @current_path)}>Dashboard</.link></li>
-            <li><.link navigate={~p"/accounts"} class={nav_link_class("/accounts", @current_path)}>Accounts</.link></li>
-            <li><.link navigate={~p"/transactions"} class={nav_link_class("/transactions", @current_path)}>Transactions</.link></li>
-            <li><.link navigate={~p"/portfolio"} class={nav_link_class("/portfolio", @current_path)}>Portfolio</.link></li>
-            <li><.link navigate={~p"/budget"} class={nav_link_class("/budget", @current_path)}>Budget</.link></li>
-            <li><.link navigate={~p"/reports"} class={nav_link_class("/reports", @current_path)}>Reports</.link></li>
-          </ul>
         </div>
       </div>
-    </div>
+    </header>
     <main>
       {@inner_content}
     </main>
@@ -63,8 +118,19 @@ defmodule XactionsWeb.Layouts do
   end
 
   defp nav_link_class(path, current_path) do
-    base = "btn btn-ghost btn-sm"
-    if path == current_path, do: base <> " btn-active", else: base
+    base = "text-sm px-3 py-2 rounded-lg transition-colors"
+
+    if path == current_path,
+      do: base <> " bg-[#ececea] text-[#030213]",
+      else: base <> " text-[#717182] hover:text-[#030213] hover:bg-[#ececea]/50"
+  end
+
+  defp mobile_nav_link_class(path, current_path) do
+    base = "block px-4 py-2 text-sm transition-colors"
+
+    if path == current_path,
+      do: base <> " bg-[#ececea] text-[#030213]",
+      else: base <> " text-[#717182] hover:text-[#030213] hover:bg-[#ececea]/50"
   end
 
   @doc """

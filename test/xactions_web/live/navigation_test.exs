@@ -12,10 +12,10 @@ defmodule XactionsWeb.NavigationTest do
     test "assigns current_path to socket on each navigation", %{conn: conn} do
       {:ok, view, _html} = live(conn, ~p"/accounts")
       # current_path="/accounts" causes Accounts link to be active
-      assert has_element?(view, ".btn-active[href='/accounts']")
+      assert has_element?(view, "a.bg-\\[\\#ececea\\][href='/accounts']")
       # Navigate to "/" and confirm current_path updates
       {:ok, view, _html} = live(conn, ~p"/")
-      assert has_element?(view, ".btn-active[href='/']")
+      assert has_element?(view, "a.bg-\\[\\#ececea\\][href='/']")
     end
   end
 
@@ -43,16 +43,16 @@ defmodule XactionsWeb.NavigationTest do
       {:ok, conn: authenticated_conn(conn)}
     end
 
-    test "Dashboard nav link has btn-active class when visiting /", %{conn: conn} do
+    test "Dashboard nav link is highlighted when visiting /", %{conn: conn} do
       {:ok, view, _html} = live(conn, ~p"/")
-      assert has_element?(view, ".btn-active[href='/']")
+      assert has_element?(view, "a.bg-\\[\\#ececea\\][href='/']")
     end
 
-    test "Accounts nav link has btn-active when visiting /accounts; Dashboard does not",
+    test "Accounts nav link is highlighted when visiting /accounts; Dashboard is not",
          %{conn: conn} do
       {:ok, view, _html} = live(conn, ~p"/accounts")
-      assert has_element?(view, ".btn-active[href='/accounts']")
-      refute has_element?(view, ".btn-active[href='/']")
+      assert has_element?(view, "a.bg-\\[\\#ececea\\][href='/accounts']")
+      refute has_element?(view, "a.bg-\\[\\#ececea\\][href='/']")
     end
   end
 

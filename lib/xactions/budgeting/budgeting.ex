@@ -25,7 +25,8 @@ defmodule Xactions.Budgeting do
     Decimal.sub(income, allocated)
   end
 
-  defp total_income(%Date{} = date) do
+  @doc "Returns the total income transactions for the given month."
+  def total_income(%Date{} = date) do
     income_ids = income_category_ids()
 
     if income_ids == [] do
@@ -45,7 +46,8 @@ defmodule Xactions.Budgeting do
     end
   end
 
-  defp total_allocated(%Date{} = date) do
+  @doc "Returns the total allocated amount across all active envelopes for the given month."
+  def total_allocated(%Date{} = date) do
     result =
       Repo.one(
         from bm in BudgetMonth,
@@ -58,6 +60,20 @@ defmodule Xactions.Budgeting do
       )
 
     result || Decimal.new("0")
+  end
+
+  @doc "Returns the total spent across all active envelopes for the given month."
+  def total_spent(%Date{} = date) do
+    active_envelopes =
+      Repo.all(
+        from e in BudgetEnvelope,
+          where: is_nil(e.archived_at),
+          preload: [envelope_categories: []]
+      )
+
+    active_envelopes
+    |> Enum.map(&envelope_spent(&1, date))
+    |> Enum.reduce(Decimal.new("0"), &Decimal.add/2)
   end
 
   defp income_category_ids do
@@ -84,9 +100,10 @@ defmodule Xactions.Budgeting do
       )
 
     Enum.map(envelopes, fn env ->
-      bm = Enum.find(env.budget_months, fn bm ->
-        bm.month == date.month && bm.year == date.year
-      end)
+      bm =
+        Enum.find(env.budget_months, fn bm ->
+          bm.month == date.month && bm.year == date.year
+        end)
 
       budgeted = (bm && bm.allocated_amount) || Decimal.new("0")
       spent = envelope_spent(env, date)
@@ -148,7 +165,11 @@ defmodule Xactions.Budgeting do
   Sets or updates the allocation for an envelope in a given month.
   """
   def set_allocation(%BudgetEnvelope{} = envelope, %Date{} = date, amount) do
-    case Repo.get_by(BudgetMonth, budget_envelope_id: envelope.id, month: date.month, year: date.year) do
+    case Repo.get_by(BudgetMonth,
+           budget_envelope_id: envelope.id,
+           month: date.month,
+           year: date.year
+         ) do
       nil ->
         %BudgetMonth{}
         |> BudgetMonth.changeset(%{
@@ -204,8 +225,14 @@ defmodule Xactions.Budgeting do
       )
 
     Enum.each(active_envelopes, fn env ->
-      unless Repo.get_by(BudgetMonth, budget_envelope_id: env.id, month: date.month, year: date.year) do
-        prev_bm = Repo.get_by(BudgetMonth, budget_envelope_id: env.id, month: prev.month, year: prev.year)
+      unless Repo.get_by(BudgetMonth,
+               budget_envelope_id: env.id,
+               month: date.month,
+               year: date.year
+             ) do
+        prev_bm =
+          Repo.get_by(BudgetMonth, budget_envelope_id: env.id, month: prev.month, year: prev.year)
+
         rollover_envelope(env, prev_bm, prev, date)
       end
     end)
@@ -215,26 +242,42 @@ defmodule Xactions.Budgeting do
 
   defp rollover_envelope(_env, nil, _prev, _date), do: :ok
 
-  defp rollover_envelope(%BudgetEnvelope{type: "fixed"} = env, %BudgetMonth{} = prev_bm, _prev, date) do
+  defp rollover_envelope(
+         %BudgetEnvelope{type: "fixed"} = env,
+         %BudgetMonth{} = prev_bm,
+         _prev,
+         date
+       ) do
     insert_budget_month(env.id, date, prev_bm.allocated_amount)
   end
 
-  defp rollover_envelope(%BudgetEnvelope{type: "variable"} = env, %BudgetMonth{} = prev_bm, _prev, date) do
+  defp rollover_envelope(
+         %BudgetEnvelope{type: "variable"} = env,
+         %BudgetMonth{} = prev_bm,
+         _prev,
+         date
+       ) do
     insert_budget_month(env.id, date, prev_bm.allocated_amount)
   end
 
-  defp rollover_envelope(%BudgetEnvelope{type: "rollover"} = env, %BudgetMonth{} = prev_bm, prev, date) do
+  defp rollover_envelope(
+         %BudgetEnvelope{type: "rollover"} = env,
+         %BudgetMonth{} = prev_bm,
+         prev,
+         date
+       ) do
     # Compute unspent = allocated - spent for previous month
     cat_ids = envelope_category_ids(env.id)
     prev_spent = spent_for_period(cat_ids, prev)
     unspent = Decimal.sub(prev_bm.allocated_amount, prev_spent)
 
     # Apply rollover cap if set
-    carry = if env.rollover_cap && Decimal.compare(unspent, env.rollover_cap) == :gt do
-      env.rollover_cap
-    else
-      unspent
-    end
+    carry =
+      if env.rollover_cap && Decimal.compare(unspent, env.rollover_cap) == :gt do
+        env.rollover_cap
+      else
+        unspent
+      end
 
     amount = if Decimal.negative?(carry), do: Decimal.new("0"), else: carry
     insert_budget_month(env.id, date, amount)
