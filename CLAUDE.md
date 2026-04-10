@@ -1,8 +1,10 @@
 # xactions Development Guidelines
 
-Auto-generated from all feature plans. Last updated: 2026-04-09
+Auto-generated from all feature plans. Last updated: 2026-04-10
 
 ## Active Technologies
+- Elixir 1.17+ / OTP 27 + Phoenix 1.8.5, Phoenix LiveView 1.1.x, DaisyUI (already installed via `assets/vendor/daisyui.js`), Tailwind CSS (002-site-navigation-menu)
+- N/A — navigation is stateless (002-site-navigation-menu)
 
 - Elixir ~> 1.17, Erlang/OTP 27 + Phoenix ~> 1.7, Phoenix LiveView ~> 1.0, ecto_sqlite3, (001-personal-accounting)
 
@@ -38,6 +40,7 @@ mix ecto.reset         # Drop + recreate + migrate + seed DB
 - LiveView events follow the contracts in `specs/001-personal-accounting/contracts/`.
 
 ## Recent Changes
+- 002-site-navigation-menu: Added Elixir 1.17+ / OTP 27 + Phoenix 1.8.5, Phoenix LiveView 1.1.x, DaisyUI (already installed via `assets/vendor/daisyui.js`), Tailwind CSS
 
 - 001-personal-accounting: Added Elixir ~> 1.17, Erlang/OTP 27 + Phoenix ~> 1.7, Phoenix LiveView ~> 1.0, ecto_sqlite3,
 
