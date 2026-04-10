@@ -26,13 +26,13 @@ defmodule XactionsWeb.NavigationTest do
     end
 
     test "renders all six section links on dashboard", %{conn: conn} do
-      {:ok, _view, html} = live(conn, ~p"/")
-      assert html =~ ~p"/"
-      assert html =~ ~p"/accounts"
-      assert html =~ ~p"/transactions"
-      assert html =~ ~p"/portfolio"
-      assert html =~ ~p"/budget"
-      assert html =~ ~p"/reports"
+      {:ok, view, _html} = live(conn, ~p"/")
+      assert has_element?(view, "a[href='/']")
+      assert has_element?(view, "a[href='/accounts']")
+      assert has_element?(view, "a[href='/transactions']")
+      assert has_element?(view, "a[href='/portfolio']")
+      assert has_element?(view, "a[href='/budget']")
+      assert has_element?(view, "a[href='/reports']")
     end
   end
 
@@ -64,8 +64,8 @@ defmodule XactionsWeb.NavigationTest do
     end
 
     test "navbar contains Sign Out link targeting /logout when authenticated", %{conn: conn} do
-      {:ok, _view, html} = live(conn, ~p"/")
-      assert html =~ ~p"/logout"
+      {:ok, view, _html} = live(conn, ~p"/")
+      assert has_element?(view, "a[href='/logout']")
     end
 
     test "unauthenticated GET / redirects to /login" do
