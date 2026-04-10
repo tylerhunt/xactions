@@ -87,7 +87,7 @@
 
 ### Implementation
 
-- [X] T012 [US3] Add `<.link href={~p"/logout"} method="delete">Sign Out</.link>` to the navbar-end in `lib/xactions_web/components/layouts.ex`, after the section links
+- [X] T012 [US3] Add a `hero-user-circle` icon button to the navbar-end in `lib/xactions_web/components/layouts.ex` that opens a DaisyUI `dropdown dropdown-end` containing a Sign Out link (`<.link href={~p"/logout"} method="delete">`); on mobile the Sign Out link is also removed from the hamburger dropdown since it lives in the user menu
 
 **Note**: FR-010 (unauthenticated `/` → `/login`) is already satisfied by the existing `AuthPlug`. T011 verifies this existing behavior; no new implementation is required.
 
