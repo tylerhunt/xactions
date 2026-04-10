@@ -101,7 +101,7 @@
 
 - [X] T013 Remove the unused Phoenix default content from `app/1` in `lib/xactions_web/components/layouts.ex` (old website/GitHub links, unused `@current_scope` attr, `theme_toggle` call) if not used elsewhere; keep the `theme_toggle/1` and `flash_group/1` helper functions
 - [X] T014 Run `mix test` to confirm all existing LiveView tests and new navigation tests pass with zero failures
-- [ ] T015 Manually verify the navbar renders correctly at 375px viewport width using browser dev tools — confirm all links are visible and tappable without overflow
+- [X] T015 Manually verify the navbar renders correctly at 375px viewport width using browser dev tools — confirm all links are visible and tappable without overflow
 
 ---
 
