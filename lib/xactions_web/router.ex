@@ -31,12 +31,16 @@ defmodule XactionsWeb.Router do
   scope "/", XactionsWeb do
     pipe_through [:browser, :authenticated]
 
-    live "/", DashboardLive
-    live "/accounts", AccountsLive
-    live "/transactions", TransactionsLive
-    live "/portfolio", PortfolioLive
-    live "/budget", BudgetLive
-    live "/reports", ReportsLive
+    live_session :authenticated,
+      layout: {XactionsWeb.Layouts, :app},
+      on_mount: XactionsWeb.NavHooks do
+      live "/", DashboardLive
+      live "/accounts", AccountsLive
+      live "/transactions", TransactionsLive
+      live "/portfolio", PortfolioLive
+      live "/budget", BudgetLive
+      live "/reports", ReportsLive
+    end
   end
 
   # Enable LiveDashboard in development

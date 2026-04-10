@@ -17,7 +17,7 @@
 
 **Purpose**: Confirm existing infrastructure before making changes.
 
-- [ ] T001 Verify DaisyUI `navbar` class is available by checking `assets/vendor/daisyui.js` for the navbar component definition
+- [X] T001 Verify DaisyUI `navbar` class is available by checking `assets/vendor/daisyui.js` for the navbar component definition
 
 **Checkpoint**: DaisyUI navbar confirmed available — proceed to Foundational phase.
 
@@ -29,9 +29,9 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T002 Write a failing test asserting that `XactionsWeb.NavHooks.on_mount(:default, ...)` assigns `current_path` to the socket in `test/xactions_web/live/navigation_test.exs`
-- [ ] T003 Create `XactionsWeb.NavHooks` module with `on_mount(:default, ...)` that uses `attach_hook/4` on `:handle_params` to assign `current_path` from `URI.parse(url).path` in `lib/xactions_web/live/nav_hooks.ex`
-- [ ] T004 Update the authenticated `scope` in `lib/xactions_web/router.ex` to wrap all six `live` routes in a `live_session :authenticated` block with `layout: {XactionsWeb.Layouts, :app}` and `on_mount: XactionsWeb.NavHooks`
+- [X] T002 Write a failing test asserting that `XactionsWeb.NavHooks.on_mount(:default, ...)` assigns `current_path` to the socket in `test/xactions_web/live/navigation_test.exs`
+- [X] T003 Create `XactionsWeb.NavHooks` module with `on_mount(:default, ...)` that uses `attach_hook/4` on `:handle_params` to assign `current_path` from `URI.parse(url).path` in `lib/xactions_web/live/nav_hooks.ex`
+- [X] T004 Update the authenticated `scope` in `lib/xactions_web/router.ex` to wrap all six `live` routes in a `live_session :authenticated` block with `layout: {XactionsWeb.Layouts, :app}` and `on_mount: XactionsWeb.NavHooks`
 
 **Checkpoint**: `NavHooks` module compiles, router compiles with `live_session`, foundational test passes — user story phases can now begin.
 
@@ -45,11 +45,11 @@
 
 ### Tests (write first — must FAIL before T006)
 
-- [ ] T005 [P] [US1] Write failing test asserting the navbar renders with links to Dashboard (`/`), Accounts (`/accounts`), Transactions (`/transactions`), Portfolio (`/portfolio`), Budget (`/budget`), and Reports (`/reports`) on the dashboard page in `test/xactions_web/live/navigation_test.exs`
+- [X] T005 [P] [US1] Write failing test asserting the navbar renders with links to Dashboard (`/`), Accounts (`/accounts`), Transactions (`/transactions`), Portfolio (`/portfolio`), Budget (`/budget`), and Reports (`/reports`) on the dashboard page in `test/xactions_web/live/navigation_test.exs`
 
 ### Implementation
 
-- [ ] T006 [US1] Replace the placeholder `app/1` function in `lib/xactions_web/components/layouts.ex` with a DaisyUI `navbar` containing: navbar-start with "xactions" brand link to `~p"/"`, navbar-end with `<.link navigate={~p"..."}>` for each of the six sections, a `<main>` wrapper for `render_slot(@inner_block)`, and `<.flash_group flash={@flash} />`
+- [X] T006 [US1] Replace the placeholder `app/1` function in `lib/xactions_web/components/layouts.ex` with a DaisyUI `navbar` containing: navbar-start with "xactions" brand link to `~p"/"`, navbar-end with `<.link navigate={~p"..."}>` for each of the six sections, a `<main>` wrapper for `render_slot(@inner_block)`, and `<.flash_group flash={@flash} />`
 
 **Checkpoint**: All six section links render on every authenticated page — US1 independently testable and functional.
 
@@ -63,12 +63,12 @@
 
 ### Tests (write first — must FAIL before T009)
 
-- [ ] T007 [P] [US2] Write failing test asserting the Dashboard nav link has the `btn-active` class when visiting `"/"` in `test/xactions_web/live/navigation_test.exs`
-- [ ] T008 [P] [US2] Write failing test asserting the Accounts nav link has the `btn-active` class when visiting `"/accounts"`, and the Dashboard link does not in `test/xactions_web/live/navigation_test.exs`
+- [X] T007 [P] [US2] Write failing test asserting the Dashboard nav link has the `btn-active` class when visiting `"/"` in `test/xactions_web/live/navigation_test.exs`
+- [X] T008 [P] [US2] Write failing test asserting the Accounts nav link has the `btn-active` class when visiting `"/accounts"`, and the Dashboard link does not in `test/xactions_web/live/navigation_test.exs`
 
 ### Implementation
 
-- [ ] T009 [US2] Add a private `nav_link_class/2` helper to `lib/xactions_web/components/layouts.ex` that returns `"btn btn-ghost btn-sm"` plus `" btn-active"` when the given path matches `@current_path`, and apply it to each section link in the `app/1` layout
+- [X] T009 [US2] Add a private `nav_link_class/2` helper to `lib/xactions_web/components/layouts.ex` that returns `"btn btn-ghost btn-sm"` plus `" btn-active"` when the given path matches `@current_path`, and apply it to each section link in the `app/1` layout
 
 **Checkpoint**: Exactly one nav link is highlighted per page — US2 independently testable and functional.
 
@@ -82,12 +82,12 @@
 
 ### Tests (write first — must FAIL before T012)
 
-- [ ] T010 [P] [US3] Write failing test asserting the navbar contains a Sign Out element that targets `"/logout"` when the user is authenticated in `test/xactions_web/live/navigation_test.exs`
-- [ ] T011 [P] [US3] Write failing test asserting an unauthenticated `GET /` request redirects to `"/login"` in `test/xactions_web/live/navigation_test.exs`
+- [X] T010 [P] [US3] Write failing test asserting the navbar contains a Sign Out element that targets `"/logout"` when the user is authenticated in `test/xactions_web/live/navigation_test.exs`
+- [X] T011 [P] [US3] Write failing test asserting an unauthenticated `GET /` request redirects to `"/login"` in `test/xactions_web/live/navigation_test.exs`
 
 ### Implementation
 
-- [ ] T012 [US3] Add `<.link href={~p"/logout"} method="delete">Sign Out</.link>` to the navbar-end in `lib/xactions_web/components/layouts.ex`, after the section links
+- [X] T012 [US3] Add `<.link href={~p"/logout"} method="delete">Sign Out</.link>` to the navbar-end in `lib/xactions_web/components/layouts.ex`, after the section links
 
 **Note**: FR-010 (unauthenticated `/` → `/login`) is already satisfied by the existing `AuthPlug`. T011 verifies this existing behavior; no new implementation is required.
 
@@ -99,8 +99,8 @@
 
 **Purpose**: Clean up, verify no regressions, confirm mobile rendering.
 
-- [ ] T013 Remove the unused Phoenix default content from `app/1` in `lib/xactions_web/components/layouts.ex` (old website/GitHub links, unused `@current_scope` attr, `theme_toggle` call) if not used elsewhere; keep the `theme_toggle/1` and `flash_group/1` helper functions
-- [ ] T014 Run `mix test` to confirm all existing LiveView tests and new navigation tests pass with zero failures
+- [X] T013 Remove the unused Phoenix default content from `app/1` in `lib/xactions_web/components/layouts.ex` (old website/GitHub links, unused `@current_scope` attr, `theme_toggle` call) if not used elsewhere; keep the `theme_toggle/1` and `flash_group/1` helper functions
+- [X] T014 Run `mix test` to confirm all existing LiveView tests and new navigation tests pass with zero failures
 - [ ] T015 Manually verify the navbar renders correctly at 375px viewport width using browser dev tools — confirm all links are visible and tappable without overflow
 
 ---
