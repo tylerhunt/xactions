@@ -17,6 +17,7 @@
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
 :root {
+  --background-color: oklch(98.6% 0.002 67.8);
   --text-color: oklch(14.5% 0 0);
 }
 
@@ -30,5 +31,6 @@
 /* This file is for your main application CSS */
 
 body {
+  background-color: var(--background-color);
   color: var(--text-color);
 }

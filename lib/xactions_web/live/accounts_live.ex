@@ -113,7 +113,7 @@ defmodule XactionsWeb.AccountsLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <div class="min-h-screen bg-[#f8f7f5]">
+    <div class="min-h-screen">
       <div class="max-w-4xl mx-auto px-6 py-8">
         <div class="flex items-center justify-between mb-6">
           <h1 class="text-2xl tracking-tight">Accounts</h1>

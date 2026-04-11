@@ -129,7 +129,7 @@ defmodule XactionsWeb.BudgetLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <div class="min-h-screen bg-[#f8f7f5]">
+    <div class="min-h-screen">
       <%!-- Month Navigation + Summary --%>
       <div class="max-w-7xl mx-auto px-6 py-8">
         <%!-- Month Nav --%>
