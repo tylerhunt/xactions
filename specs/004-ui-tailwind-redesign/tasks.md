@@ -187,8 +187,8 @@ in Phases 3–7. Complete this phase before any page-level work.
 
 - [X] T018 [P] Run `mix test` — confirm full suite green; fix any regressions
 - [X] T019 [P] Run `mix format` on all modified files
-- [ ] T020 Verify `bg-[#f8f7f5]` root container is applied consistently on all pages (dashboard, accounts, transactions, portfolio, reports)
-- [ ] T021 Manual smoke test: start server with `mix phx.server`, visit each page, confirm no invisible text or DaisyUI-specific styling artifacts
+- [x] T020 Verify `bg-[#f8f7f5]` root container is applied consistently on all pages (dashboard, accounts, transactions, portfolio, reports)
+- [x] T021 Manual smoke test: start server with `mix phx.server`, visit each page, confirm no invisible text or DaisyUI-specific styling artifacts
 
 ---
 
