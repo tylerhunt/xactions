@@ -30,6 +30,12 @@ defmodule XactionsWeb.DashboardLiveTest do
   end
 
   describe "sync_now event" do
+    setup do
+      Ecto.Adapters.SQL.Sandbox.mode(Xactions.Repo, {:shared, self()})
+      start_supervised!(Xactions.Sync.SyncScheduler)
+      :ok
+    end
+
     test "triggers sync for institution", %{conn: conn} do
       inst = institution!(%{scraper_module: "Xactions.FakeScraper"})
       {:ok, view, _html} = live(conn, ~p"/")
@@ -42,6 +48,7 @@ defmodule XactionsWeb.DashboardLiveTest do
       |> render_click()
 
       assert_receive {:sync_started, ^inst_id}, 1000
+      assert_receive {:sync_complete, ^inst_id}, 2000
     end
   end
 

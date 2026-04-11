@@ -27,6 +27,8 @@ config :xactions, XactionsWeb.Endpoint,
   secret_key_base: "Z4v93KJNbN94zF5N9+xF7xWvhA78f3o1AsNC9N8qNXCIL51cKVAFWfhfVtLlmoSH",
   server: false
 
+config :xactions, start_sync_scheduler: false
+
 # Print only warnings and errors during test
 config :logger, level: :warning
 
