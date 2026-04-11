@@ -3,6 +3,8 @@
 Auto-generated from all feature plans. Last updated: 2026-04-10
 
 ## Active Technologies
+- Elixir 1.17+ / OTP 27 + Phoenix 1.8.5, Phoenix LiveView 1.1.x, Tailwind CSS, `ecto_sqlite3` (005-envelope-categories)
+- SQLite — `envelope_categories` join table already migrated (005-envelope-categories)
 
 - back end: Elixir 1.17+ / OTP 27 + Phoenix 1.8.5
 - front end: Phoenix LiveView 1.1.x
@@ -47,6 +49,7 @@ mix credo              # Run static code analysis
 - LiveView events follow the contracts in `specs/001-personal-accounting/contracts/`.
 
 ## Recent Changes
+- 005-envelope-categories: Added Elixir 1.17+ / OTP 27 + Phoenix 1.8.5, Phoenix LiveView 1.1.x, Tailwind CSS, `ecto_sqlite3`
 
 - 003-budget-page-redesign: Added Elixir 1.17+ / OTP 27 + Phoenix 1.8.5, Phoenix LiveView 1.1.x, Tailwind CSS
 
