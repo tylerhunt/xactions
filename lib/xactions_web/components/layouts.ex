@@ -49,12 +49,14 @@ defmodule XactionsWeb.Layouts do
             <button
               class="p-2 rounded-lg hover:bg-[#ececea] transition-colors"
               id="user-menu-btn"
-              phx-click={JS.toggle(to: "#user-menu-dropdown")}
+              data-dropdown-trigger
             >
               <.icon name="hero-user-circle" class="size-6" />
             </button>
             <div
               id="user-menu-dropdown"
+              data-dropdown-panel
+              phx-update="ignore"
               class="hidden absolute right-0 mt-1 w-40 bg-white border border-black/[.08] rounded-xl shadow-lg z-20 py-1"
             >
               <.link

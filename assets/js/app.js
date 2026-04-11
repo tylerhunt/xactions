@@ -25,11 +25,33 @@ import {LiveSocket} from "phoenix_live_view"
 import {hooks as colocatedHooks} from "phoenix-colocated/xactions"
 import topbar from "../vendor/topbar"
 
+const Dropdown = {
+  mounted() {
+    const panel = this.el.querySelector("[data-dropdown-panel]")
+    const trigger = this.el.querySelector("[data-dropdown-trigger]")
+
+    trigger.addEventListener("click", () => panel.classList.toggle("hidden"))
+
+    this._outsideClick = (e) => {
+      if (!panel.classList.contains("hidden") && !this.el.contains(e.target)) {
+        panel.classList.add("hidden")
+      }
+    }
+    document.addEventListener("click", this._outsideClick)
+
+    panel.addEventListener("click", () => panel.classList.add("hidden"))
+  },
+
+  destroyed() {
+    document.removeEventListener("click", this._outsideClick)
+  }
+}
+
 const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 const liveSocket = new LiveSocket("/live", Socket, {
   longPollFallbackMs: 2500,
   params: {_csrf_token: csrfToken},
-  hooks: {...colocatedHooks},
+  hooks: {Dropdown, ...colocatedHooks},
 })
 
 // Show progress bar on live navigation and form submits

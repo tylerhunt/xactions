@@ -390,23 +390,23 @@ defmodule XactionsWeb.BudgetLive do
                           </div>
                         <% end %>
                       </div>
-                      <div class="relative ml-1">
+                      <div class="relative ml-1" id={"env-menu-#{env.id}"} phx-hook="Dropdown">
                         <button
-                          phx-click={Phoenix.LiveView.JS.toggle(to: "#dropdown-#{env.id}")}
                           class="p-1 hover:bg-[#ececea] rounded transition-colors"
-                          data-dropdown-trigger={env.id}
+                          data-dropdown-trigger
                         >
                           <.icon name="hero-chevron-down" class="size-4 text-gray-400" />
                         </button>
                         <div
                           id={"dropdown-#{env.id}"}
+                          data-dropdown-panel
+                          phx-update="ignore"
                           class="hidden absolute left-0 top-full mt-1 min-w-[10rem] bg-white border border-black/[.08] rounded-lg shadow-lg py-1 z-10"
                         >
                           <button
                             phx-click="open_edit_envelope"
                             phx-value-id={env.id}
                             class="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-[#ececea]/60 transition-colors"
-                            data-dropdown-edit={env.id}
                           >
                             <.icon name="hero-pencil" class="size-4" /> Edit
                           </button>
