@@ -26,8 +26,7 @@ erl_crash.dump
 /priv/static/uploads/
 
 # Environment variables
-.env
-.env.*
+.env*
 !.env.example
 
 # macOS
