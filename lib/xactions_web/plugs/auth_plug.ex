@@ -1,4 +1,6 @@
 defmodule XactionsWeb.AuthPlug do
+  @moduledoc "Plug that enforces session authentication, redirecting to /login if unauthenticated."
+
   import Plug.Conn
   import Phoenix.Controller
 

@@ -1,4 +1,6 @@
 defmodule Xactions.Accounts do
+  @moduledoc "Context for managing institutions and accounts."
+
   import Ecto.Query
 
   alias Xactions.Repo

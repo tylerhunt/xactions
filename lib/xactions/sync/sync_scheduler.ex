@@ -63,10 +63,7 @@ defmodule Xactions.Sync.SyncScheduler do
         {:noreply, state}
 
       institution ->
-        unless institution.is_manual_only do
-          Task.start(fn -> SyncWorker.sync(institution) end)
-        end
-
+        maybe_sync(institution)
         schedule_institution(institution)
         {:noreply, state}
     end
@@ -87,6 +84,9 @@ defmodule Xactions.Sync.SyncScheduler do
     |> Enum.reject(&(&1.is_manual_only))
     |> Enum.each(&schedule_institution/1)
   end
+
+  defp maybe_sync(%{is_manual_only: true}), do: :ok
+  defp maybe_sync(institution), do: Task.start(fn -> SyncWorker.sync(institution) end)
 
   defp schedule_institution(institution) do
     interval_ms = institution.sync_interval_hours * :timer.hours(1)

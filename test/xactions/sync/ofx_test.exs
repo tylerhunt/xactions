@@ -80,7 +80,7 @@ defmodule Xactions.Sync.OFXTest do
 
     test "extracts investment transactions" do
       {:ok, result} = OFX.parse(@brokerage_ofx)
-      assert length(result.transaction_data) >= 1
+      assert result.transaction_data != []
     end
   end
 

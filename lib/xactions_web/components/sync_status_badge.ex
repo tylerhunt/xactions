@@ -1,4 +1,6 @@
 defmodule XactionsWeb.Components.SyncStatusBadge do
+  @moduledoc "Status badge pill component for institution sync state."
+
   use Phoenix.Component
 
   attr :status, :string, required: true

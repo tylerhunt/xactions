@@ -36,21 +36,23 @@ defmodule Xactions.Portfolio do
     else
       holdings
       |> Enum.group_by(& &1.asset_class)
-      |> Enum.map(fn {class, group} ->
-        value = Enum.reduce(group, Decimal.new("0"), fn h, acc ->
-          Decimal.add(acc, h.current_value || Decimal.new("0"))
-        end)
-
-        pct =
-          value
-          |> Decimal.div(total)
-          |> Decimal.mult(Decimal.new("100"))
-          |> Decimal.to_float()
-
-        %{class: class, value: value, pct: pct}
-      end)
+      |> Enum.map(fn {class, group} -> allocation_entry(class, group, total) end)
       |> Enum.sort_by(& &1.pct, :desc)
     end
+  end
+
+  defp allocation_entry(class, group, total) do
+    value = Enum.reduce(group, Decimal.new("0"), fn h, acc ->
+      Decimal.add(acc, h.current_value || Decimal.new("0"))
+    end)
+
+    pct =
+      value
+      |> Decimal.div(total)
+      |> Decimal.mult(Decimal.new("100"))
+      |> Decimal.to_float()
+
+    %{class: class, value: value, pct: pct}
   end
 
   @doc """

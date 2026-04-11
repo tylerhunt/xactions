@@ -22,9 +22,9 @@ defmodule Xactions.Sync.OFX do
   defp parse_sgml(content) do
     body = extract_sgml_body(content)
 
-    with {:ok, account_data} <- extract_account(body),
-         transaction_data = extract_transactions(body),
-         holding_data = extract_holdings(body) do
+    with {:ok, account_data} <- extract_account(body) do
+      transaction_data = extract_transactions(body)
+      holding_data = extract_holdings(body)
       {:ok, %{account_data: account_data, transaction_data: transaction_data, holding_data: holding_data}}
     end
   end

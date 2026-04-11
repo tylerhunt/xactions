@@ -135,7 +135,7 @@ defmodule Xactions.Sync.SyncWorker do
   defp resolve_scraper(%Institution{scraper_module: mod}) when is_binary(mod) do
     String.to_existing_atom("Elixir.#{mod}")
   rescue
-    _ -> raise "Unknown scraper module: #{mod}"
+    e -> reraise "Unknown scraper module: #{mod}", __STACKTRACE__
   end
 
   defp start_log(institution) do

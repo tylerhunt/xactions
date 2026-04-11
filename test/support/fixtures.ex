@@ -1,4 +1,6 @@
 defmodule Xactions.Fixtures do
+  @moduledoc "Test factory helpers for creating database records."
+
   alias Xactions.Repo
   alias Xactions.Accounts.{Institution, Account}
   alias Xactions.Transactions.{Category, Transaction, TransactionSplit}

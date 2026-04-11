@@ -432,7 +432,6 @@ defmodule XactionsWeb.BudgetLive do
 
   defp changeset_error(changeset) do
     Ecto.Changeset.traverse_errors(changeset, fn {msg, _opts} -> msg end)
-    |> Enum.map(fn {field, msgs} -> "#{field}: #{Enum.join(msgs, ", ")}" end)
-    |> Enum.join("; ")
+    |> Enum.map_join("; ", fn {field, msgs} -> "#{field}: #{Enum.join(msgs, ", ")}" end)
   end
 end

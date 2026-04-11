@@ -1,4 +1,6 @@
 defmodule XactionsWeb.NavHooks do
+  @moduledoc "LiveView mount hooks for injecting navigation assigns."
+
   import Phoenix.LiveView
   import Phoenix.Component
 

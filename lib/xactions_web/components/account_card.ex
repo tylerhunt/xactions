@@ -1,4 +1,6 @@
 defmodule XactionsWeb.Components.AccountCard do
+  @moduledoc "Card component for displaying an account with balance and sync status."
+
   use Phoenix.Component
 
   alias XactionsWeb.Components.SyncStatusBadge

@@ -69,20 +69,24 @@ defmodule Xactions.Transactions do
         |> Transaction.changeset(%{category_id: category_id})
         |> Repo.update()
 
-      if txn.merchant_name do
-        pattern = MerchantRule.normalize_merchant(txn.merchant_name)
-
-        if pattern && pattern != "" do
-          Repo.insert!(
-            %MerchantRule{merchant_pattern: pattern, category_id: category_id},
-            on_conflict: [set: [category_id: category_id]],
-            conflict_target: :merchant_pattern
-          )
-        end
-      end
+      maybe_upsert_merchant_rule(txn.merchant_name, category_id)
 
       updated
     end)
+  end
+
+  defp maybe_upsert_merchant_rule(nil, _category_id), do: :ok
+
+  defp maybe_upsert_merchant_rule(merchant_name, category_id) do
+    pattern = MerchantRule.normalize_merchant(merchant_name)
+
+    if pattern && pattern != "" do
+      Repo.insert!(
+        %MerchantRule{merchant_pattern: pattern, category_id: category_id},
+        on_conflict: [set: [category_id: category_id]],
+        conflict_target: :merchant_pattern
+      )
+    end
   end
 
   @doc """
@@ -106,26 +110,28 @@ defmodule Xactions.Transactions do
     if Decimal.compare(total, txn.amount) != :eq do
       {:error, :amount_mismatch}
     else
-      Repo.transaction(fn ->
-        Repo.delete_all(from s in TransactionSplit, where: s.transaction_id == ^txn.id)
-
-        for split <- splits do
-          Repo.insert!(%TransactionSplit{
-            transaction_id: txn.id,
-            category_id: parse_int(Map.get(split, "category_id")),
-            amount: parse_decimal(Map.get(split, "amount", "0")),
-            notes: Map.get(split, "notes")
-          })
-        end
-
-        {:ok, updated} =
-          txn
-          |> Transaction.changeset(%{is_split: true, category_id: nil})
-          |> Repo.update()
-
-        %{transaction: updated}
-      end)
+      Repo.transaction(fn -> do_split(txn, splits) end)
     end
+  end
+
+  defp do_split(txn, splits) do
+    Repo.delete_all(from s in TransactionSplit, where: s.transaction_id == ^txn.id)
+
+    for split <- splits do
+      Repo.insert!(%TransactionSplit{
+        transaction_id: txn.id,
+        category_id: parse_int(Map.get(split, "category_id")),
+        amount: parse_decimal(Map.get(split, "amount", "0")),
+        notes: Map.get(split, "notes")
+      })
+    end
+
+    {:ok, updated} =
+      txn
+      |> Transaction.changeset(%{is_split: true, category_id: nil})
+      |> Repo.update()
+
+    %{transaction: updated}
   end
 
   @doc """

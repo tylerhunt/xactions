@@ -45,27 +45,26 @@ defmodule Xactions.Reporting do
 
     Enum.map(active_envelopes, fn env ->
       cat_ids = Enum.map(env.envelope_categories, & &1.category_id)
-
-      spent =
-        if cat_ids == [] do
-          Decimal.new("0")
-        else
-          result =
-            Repo.one(
-              from t in Transaction,
-                where:
-                  t.category_id in ^cat_ids and
-                    fragment("strftime('%m', ?)", t.date) == ^zero_padded(month) and
-                    fragment("strftime('%Y', ?)", t.date) == ^Integer.to_string(year),
-                select: sum(t.amount)
-            )
-
-          raw = result || Decimal.new("0")
-          if Decimal.negative?(raw), do: Decimal.negate(raw), else: raw
-        end
-
+      spent = envelope_spent(cat_ids, month, year)
       %{envelope_name: env.name, envelope_id: env.id, spent: spent}
     end)
+  end
+
+  defp envelope_spent([], _month, _year), do: Decimal.new("0")
+
+  defp envelope_spent(cat_ids, month, year) do
+    result =
+      Repo.one(
+        from t in Transaction,
+          where:
+            t.category_id in ^cat_ids and
+              fragment("strftime('%m', ?)", t.date) == ^zero_padded(month) and
+              fragment("strftime('%Y', ?)", t.date) == ^Integer.to_string(year),
+          select: sum(t.amount)
+      )
+
+    raw = result || Decimal.new("0")
+    if Decimal.negative?(raw), do: Decimal.negate(raw), else: raw
   end
 
   @doc """
