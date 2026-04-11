@@ -16,6 +16,9 @@ defmodule XactionsWeb.BudgetLive do
      |> assign(:date, date)
      |> assign(:editing_envelope_id, nil)
      |> assign(:show_create_form, false)
+     |> assign(:editing_envelope, nil)
+     |> assign(:show_edit_form, false)
+     |> assign(:available_edit_categories, [])
      |> load_budget_data(date)}
   end
 
@@ -53,15 +56,90 @@ defmodule XactionsWeb.BudgetLive do
 
   @impl true
   def handle_event("create_envelope", %{"envelope" => attrs}, socket) do
-    case Budgeting.create_envelope(attrs) do
+    category_ids =
+      attrs
+      |> Map.get("category_ids", [])
+      |> List.wrap()
+      |> Enum.map(&String.to_integer/1)
+
+    if category_ids == [] do
+      {:noreply, put_flash(socket, :error, "Select at least one category")}
+    else
+      case Budgeting.create_envelope_with_categories(attrs, category_ids) do
+        {:ok, _} ->
+          {:noreply,
+           socket
+           |> assign(:show_create_form, false)
+           |> load_budget_data(socket.assigns.date)}
+
+        {:error, changeset} when is_struct(changeset, Ecto.Changeset) ->
+          {:noreply, put_flash(socket, :error, changeset_error(changeset))}
+
+        {:error, _reason} ->
+          {:noreply, put_flash(socket, :error, "Could not create envelope")}
+      end
+    end
+  end
+
+  @impl true
+  def handle_event("open_edit_envelope", %{"id" => id}, socket) do
+    env_id = String.to_integer(id)
+    env = Enum.find(socket.assigns.envelopes, &(&1.id == env_id))
+
+    if env do
+      available = Budgeting.list_available_categories(except_envelope_id: env_id)
+
+      {:noreply,
+       socket
+       |> assign(:editing_envelope, env)
+       |> assign(:available_edit_categories, available)
+       |> assign(:show_edit_form, true)}
+    else
+      {:noreply, socket}
+    end
+  end
+
+  @impl true
+  def handle_event("cancel_edit_envelope", _params, socket) do
+    {:noreply,
+     socket
+     |> assign(:editing_envelope, nil)
+     |> assign(:show_edit_form, false)}
+  end
+
+  @impl true
+  def handle_event("update_envelope", %{"envelope" => attrs}, socket) do
+    category_ids =
+      attrs
+      |> Map.get("category_ids", [])
+      |> List.wrap()
+      |> Enum.map(&String.to_integer/1)
+
+    if category_ids == [] do
+      {:noreply, put_flash(socket, :error, "Select at least one category")}
+    else
+      env_id = attrs |> Map.get("id") |> String.to_integer()
+      env = Enum.find(socket.assigns.envelopes, &(&1.id == env_id))
+      do_update_envelope(socket, env, attrs, category_ids)
+    end
+  end
+
+  defp do_update_envelope(socket, nil, _attrs, _ids), do: {:noreply, socket}
+
+  defp do_update_envelope(socket, env, attrs, category_ids) do
+    case Budgeting.update_envelope(env, attrs, category_ids) do
       {:ok, _} ->
         {:noreply,
          socket
-         |> assign(:show_create_form, false)
+         |> assign(:editing_envelope, nil)
+         |> assign(:show_edit_form, false)
          |> load_budget_data(socket.assigns.date)}
 
-      {:error, changeset} ->
+      {:error, changeset} when is_struct(changeset, Ecto.Changeset) ->
         {:noreply, put_flash(socket, :error, changeset_error(changeset))}
+
+      {:error, _reason} ->
+        {:noreply, put_flash(socket, :error, "Could not update envelope")}
     end
   end
 
@@ -115,6 +193,7 @@ defmodule XactionsWeb.BudgetLive do
     unallocated = Decimal.sub(monthly_income, total_allocated)
     unassigned = Budgeting.list_unassigned_transactions(date)
     categories = Transactions.list_categories()
+    available_categories = Budgeting.list_available_categories()
 
     socket
     |> assign(:envelopes, envelopes)
@@ -124,6 +203,7 @@ defmodule XactionsWeb.BudgetLive do
     |> assign(:unallocated, unallocated)
     |> assign(:unassigned, unassigned)
     |> assign(:categories, categories)
+    |> assign(:available_categories, available_categories)
   end
 
   @impl true
@@ -229,6 +309,27 @@ defmodule XactionsWeb.BudgetLive do
                   </select>
                 </div>
               </div>
+              <div class="mb-4">
+                <label class="text-xs block mb-2">
+                  Categories <span class="text-[#d4183d]">*</span>
+                </label>
+                <div class="max-h-40 overflow-y-auto border border-black/[.08] rounded-lg p-2 flex flex-col gap-1">
+                  <%= for cat <- @available_categories do %>
+                    <label class="flex items-center gap-2 text-sm cursor-pointer px-1 py-0.5 hover:bg-[#ececea]/50 rounded">
+                      <input
+                        type="checkbox"
+                        name="envelope[category_ids][]"
+                        value={cat.id}
+                        class="rounded"
+                      />
+                      {cat.name}
+                    </label>
+                  <% end %>
+                  <%= if @available_categories == [] do %>
+                    <p class="text-xs text-gray-400 px-1">No unassigned categories available.</p>
+                  <% end %>
+                </div>
+              </div>
               <div class="flex gap-2">
                 <button
                   type="submit"
@@ -278,12 +379,48 @@ defmodule XactionsWeb.BudgetLive do
                         style={"background-color: #{env.color || "#3b82f6"}"}
                       >
                       </div>
-                      <span
-                        class="font-medium"
-                        data-envelope-name={env.name}
-                      >
-                        {env.name}
-                      </span>
+                      <div>
+                        <span
+                          class="font-medium"
+                          data-envelope-name={env.name}
+                        >
+                          {env.name}
+                        </span>
+                        <%= if env.envelope_categories != [] do %>
+                          <div class="text-xs text-gray-400 mt-0.5">
+                            {Enum.map_join(env.envelope_categories, ", ", & &1.category.name)}
+                          </div>
+                        <% end %>
+                      </div>
+                      <div class="relative ml-1">
+                        <button
+                          phx-click={Phoenix.LiveView.JS.toggle(to: "#dropdown-#{env.id}")}
+                          class="p-1 hover:bg-[#ececea] rounded transition-colors"
+                          data-dropdown-trigger={env.id}
+                        >
+                          <.icon name="hero-chevron-down" class="size-4 text-gray-400" />
+                        </button>
+                        <div
+                          id={"dropdown-#{env.id}"}
+                          class="hidden absolute left-0 top-full mt-1 min-w-[10rem] bg-white border border-black/[.08] rounded-lg shadow-lg py-1 z-10"
+                        >
+                          <button
+                            phx-click="open_edit_envelope"
+                            phx-value-id={env.id}
+                            class="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-[#ececea]/60 transition-colors"
+                            data-dropdown-edit={env.id}
+                          >
+                            <.icon name="hero-pencil" class="size-4" /> Edit
+                          </button>
+                          <button
+                            phx-click="archive_envelope"
+                            phx-value-id={env.id}
+                            class="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-[#ececea]/60 transition-colors text-[#d4183d]"
+                          >
+                            <.icon name="hero-archive-box" class="size-4" /> Archive
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   </td>
                   <td class="px-6 py-4 text-right">
@@ -345,20 +482,87 @@ defmodule XactionsWeb.BudgetLive do
                       </span>
                     </div>
                   </td>
-                  <td class="px-6 py-4">
-                    <button
-                      phx-click="archive_envelope"
-                      phx-value-id={env.id}
-                      class="text-xs hover:text-[#d4183d] transition-colors"
-                    >
-                      Archive
-                    </button>
-                  </td>
+                  <td class="px-6 py-4"></td>
                 </tr>
               <% end %>
             </tbody>
           </table>
         </div>
+
+        <%!-- Edit Envelope Form --%>
+        <%= if @show_edit_form && @editing_envelope do %>
+          <div class="bg-white border border-black/[.08] rounded-xl p-5 mb-6" data-edit-envelope-form>
+            <h4 class="font-medium mb-4">Edit Envelope</h4>
+            <form phx-submit="update_envelope" data-form="edit-envelope">
+              <input type="hidden" name="envelope[id]" value={@editing_envelope.id} />
+              <div class="grid grid-cols-2 gap-3 mb-4">
+                <div>
+                  <label class="text-xs block mb-1">Name</label>
+                  <input
+                    type="text"
+                    name="envelope[name]"
+                    value={@editing_envelope.name}
+                    class="w-full border border-black/[.08] rounded-lg px-3 py-2 text-sm"
+                    required
+                  />
+                </div>
+                <div>
+                  <label class="text-xs block mb-1">Type</label>
+                  <select
+                    name="envelope[type]"
+                    class="w-full border border-black/[.08] rounded-lg px-3 py-2 text-sm bg-white"
+                  >
+                    <option value="fixed" selected={@editing_envelope.type == "fixed"}>Fixed</option>
+                    <option value="variable" selected={@editing_envelope.type == "variable"}>
+                      Variable
+                    </option>
+                    <option value="rollover" selected={@editing_envelope.type == "rollover"}>
+                      Rollover
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <div class="mb-4">
+                <label class="text-xs block mb-2">
+                  Categories <span class="text-[#d4183d]">*</span>
+                </label>
+                <div class="max-h-40 overflow-y-auto border border-black/[.08] rounded-lg p-2 flex flex-col gap-1">
+                  <% assigned_ids = Enum.map(@editing_envelope.envelope_categories, & &1.category_id) %>
+                  <%= for cat <- @available_edit_categories do %>
+                    <label class="flex items-center gap-2 text-sm cursor-pointer px-1 py-0.5 hover:bg-[#ececea]/50 rounded">
+                      <input
+                        type="checkbox"
+                        name="envelope[category_ids][]"
+                        value={cat.id}
+                        checked={cat.id in assigned_ids}
+                        class="rounded"
+                      />
+                      {cat.name}
+                    </label>
+                  <% end %>
+                  <%= if @available_edit_categories == [] do %>
+                    <p class="text-xs text-gray-400 px-1">No categories available.</p>
+                  <% end %>
+                </div>
+              </div>
+              <div class="flex gap-2">
+                <button
+                  type="submit"
+                  class="px-4 py-2 bg-[#030213] text-white rounded-lg text-sm hover:bg-[#030213]/90 transition-colors"
+                >
+                  Save
+                </button>
+                <button
+                  type="button"
+                  phx-click="cancel_edit_envelope"
+                  class="px-4 py-2 hover:bg-[#ececea] rounded-lg text-sm transition-colors"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        <% end %>
 
         <%!-- Unassigned Spending --%>
         <%= if @unassigned != [] do %>

@@ -144,12 +144,96 @@ defmodule Xactions.Budgeting do
   end
 
   @doc """
+  Returns categories not assigned to any active (non-archived) envelope.
+
+  Pass `except_envelope_id: id` to include categories belonging to a specific
+  envelope (used when editing that envelope so its own categories remain selectable).
+  """
+  def list_available_categories(opts \\ []) do
+    except_id = Keyword.get(opts, :except_envelope_id)
+
+    assigned_ids =
+      Repo.all(
+        from ec in EnvelopeCategory,
+          join: env in BudgetEnvelope,
+          on: ec.budget_envelope_id == env.id,
+          where: is_nil(env.archived_at),
+          select: ec.category_id
+      )
+
+    excluded_ids =
+      if except_id do
+        own_ids =
+          Repo.all(
+            from ec in EnvelopeCategory,
+              where: ec.budget_envelope_id == ^except_id,
+              select: ec.category_id
+          )
+
+        assigned_ids -- own_ids
+      else
+        assigned_ids
+      end
+
+    Repo.all(
+      from c in Category,
+        where: c.id not in ^excluded_ids,
+        order_by: [asc: c.name]
+    )
+  end
+
+  @doc """
   Creates a new budget envelope.
   """
   def create_envelope(attrs) do
     %BudgetEnvelope{}
     |> BudgetEnvelope.changeset(attrs)
     |> Repo.insert()
+  end
+
+  @doc """
+  Creates a new budget envelope and assigns the given category IDs atomically.
+  Returns `{:error, :no_categories}` if `category_ids` is empty.
+  """
+  def create_envelope_with_categories(_attrs, []), do: {:error, :no_categories}
+
+  def create_envelope_with_categories(attrs, category_ids) do
+    Repo.transaction(fn ->
+      case create_envelope(attrs) do
+        {:ok, envelope} ->
+          assign_all_categories(envelope, category_ids)
+          envelope
+
+        {:error, changeset} ->
+          Repo.rollback(changeset)
+      end
+    end)
+  end
+
+  @doc """
+  Updates an envelope's attributes and atomically replaces its category assignments.
+
+  Deletes all existing `EnvelopeCategory` rows for the envelope and inserts new
+  ones from `category_ids`. Both the update and the reassignment are wrapped in a
+  single transaction.
+  """
+  def update_envelope(%BudgetEnvelope{} = envelope, attrs, category_ids) do
+    Repo.transaction(fn ->
+      changeset = BudgetEnvelope.changeset(envelope, attrs)
+
+      case Repo.update(changeset) do
+        {:ok, updated} ->
+          Repo.delete_all(
+            from ec in EnvelopeCategory, where: ec.budget_envelope_id == ^envelope.id
+          )
+
+          assign_all_categories(updated, category_ids)
+          updated
+
+        {:error, cs} ->
+          Repo.rollback(cs)
+      end
+    end)
   end
 
   @doc """
@@ -185,6 +269,15 @@ defmodule Xactions.Budgeting do
         |> BudgetMonth.changeset(%{allocated_amount: amount})
         |> Repo.update()
     end
+  end
+
+  defp assign_all_categories(envelope, category_ids) do
+    Enum.each(category_ids, fn cat_id ->
+      case assign_category(envelope, cat_id) do
+        {:ok, _} -> :ok
+        {:error, reason} -> Repo.rollback(reason)
+      end
+    end)
   end
 
   @doc """

@@ -345,7 +345,20 @@ defmodule XactionsWeb.BudgetLiveTest do
   end
 
   describe "create_envelope event" do
-    test "creates a new envelope", %{conn: conn} do
+    test "create form renders category checkboxes", %{conn: conn, food_cat: food_cat} do
+      {:ok, view, _html} = live(conn, ~p"/budget")
+
+      view
+      |> element("button[phx-click='open_create_envelope']")
+      |> render_click()
+
+      assert has_element?(
+               view,
+               "input[type='checkbox'][name='envelope[category_ids][]'][value='#{food_cat.id}']"
+             )
+    end
+
+    test "creates envelope with selected categories", %{conn: conn, food_cat: food_cat} do
       {:ok, view, _html} = live(conn, ~p"/budget")
 
       view
@@ -354,11 +367,129 @@ defmodule XactionsWeb.BudgetLiveTest do
 
       view
       |> form("[data-form='create-envelope']", %{
-        envelope: %{name: "Utilities", type: "fixed"}
+        envelope: %{name: "Utilities", type: "fixed", category_ids: [to_string(food_cat.id)]}
       })
       |> render_submit()
 
       assert has_element?(view, "[data-envelope-name='Utilities']")
+    end
+
+    test "shows error flash when submitting without categories", %{conn: conn} do
+      {:ok, view, _html} = live(conn, ~p"/budget")
+
+      view
+      |> element("button[phx-click='open_create_envelope']")
+      |> render_click()
+
+      view
+      |> form("[data-form='create-envelope']", %{
+        envelope: %{name: "NoCategory", type: "fixed"}
+      })
+      |> render_submit()
+
+      refute has_element?(view, "[data-envelope-name='NoCategory']")
+      assert has_element?(view, "#flash-error")
+    end
+  end
+
+  describe "envelope dropdown" do
+    test "each envelope row has a dropdown trigger", %{conn: conn} do
+      env = budget_envelope!(%{name: "Rent", type: "fixed"})
+      {:ok, view, _html} = live(conn, ~p"/budget")
+      assert has_element?(view, "[data-dropdown-trigger='#{env.id}']")
+    end
+
+    test "dropdown contains an edit item", %{conn: conn} do
+      env = budget_envelope!(%{name: "Rent", type: "fixed"})
+      {:ok, view, _html} = live(conn, ~p"/budget")
+      assert has_element?(view, "[data-dropdown-edit='#{env.id}']")
+    end
+
+    test "dropdown contains an archive item", %{conn: conn} do
+      env = budget_envelope!(%{name: "Rent", type: "fixed"})
+      {:ok, view, _html} = live(conn, ~p"/budget")
+
+      assert has_element?(
+               view,
+               "[data-envelope-row='#{env.id}'] [phx-click='archive_envelope']"
+             )
+    end
+  end
+
+  describe "edit envelope" do
+    test "open_edit_envelope event renders edit form", %{conn: conn, food_cat: food_cat} do
+      env = budget_envelope!(%{name: "Rent", type: "fixed"})
+      envelope_category!(%{budget_envelope_id: env.id, category_id: food_cat.id})
+      {:ok, view, _html} = live(conn, ~p"/budget")
+
+      view
+      |> element("[data-dropdown-edit='#{env.id}']")
+      |> render_click()
+
+      assert has_element?(view, "[data-edit-envelope-form]")
+      html = element(view, "[data-form='edit-envelope']") |> render()
+      assert html =~ "Rent"
+    end
+
+    test "edit form pre-selects current categories", %{conn: conn, food_cat: food_cat} do
+      env = budget_envelope!(%{name: "Rent", type: "fixed"})
+      envelope_category!(%{budget_envelope_id: env.id, category_id: food_cat.id})
+      {:ok, view, _html} = live(conn, ~p"/budget")
+
+      view |> element("[data-dropdown-edit='#{env.id}']") |> render_click()
+
+      html = element(view, "[data-form='edit-envelope']") |> render()
+      assert html =~ "checked"
+    end
+
+    test "update_envelope saves changes and closes form", %{conn: conn, food_cat: food_cat} do
+      env = budget_envelope!(%{name: "Old Name", type: "fixed"})
+      envelope_category!(%{budget_envelope_id: env.id, category_id: food_cat.id})
+      {:ok, view, _html} = live(conn, ~p"/budget")
+
+      view |> element("[data-dropdown-edit='#{env.id}']") |> render_click()
+
+      view
+      |> form("[data-form='edit-envelope']", %{
+        envelope: %{
+          id: to_string(env.id),
+          name: "New Name",
+          type: "fixed",
+          category_ids: [to_string(food_cat.id)]
+        }
+      })
+      |> render_submit()
+
+      assert has_element?(view, "[data-envelope-name='New Name']")
+      refute has_element?(view, "[data-edit-envelope-form]")
+    end
+
+    test "update_envelope shows error when no categories selected", %{conn: conn} do
+      # No categories assigned so no checkboxes are pre-checked in the edit form
+      env = budget_envelope!(%{name: "Rent", type: "fixed"})
+      {:ok, view, _html} = live(conn, ~p"/budget")
+
+      view |> element("[data-dropdown-edit='#{env.id}']") |> render_click()
+
+      view
+      |> form("[data-form='edit-envelope']", %{
+        envelope: %{id: to_string(env.id), name: "Rent", type: "fixed"}
+      })
+      |> render_submit()
+
+      assert has_element?(view, "#flash-error")
+    end
+
+    test "cancel_edit_envelope closes form", %{conn: conn, food_cat: food_cat} do
+      env = budget_envelope!(%{name: "Rent", type: "fixed"})
+      envelope_category!(%{budget_envelope_id: env.id, category_id: food_cat.id})
+      {:ok, view, _html} = live(conn, ~p"/budget")
+
+      view |> element("[data-dropdown-edit='#{env.id}']") |> render_click()
+      assert has_element?(view, "[data-edit-envelope-form]")
+
+      view |> element("button[phx-click='cancel_edit_envelope']") |> render_click()
+      refute has_element?(view, "[data-edit-envelope-form]")
     end
   end
 
