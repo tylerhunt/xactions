@@ -20,7 +20,7 @@ lib/xactions_web/      # Phoenix web layer (live/, components/, router.ex)
 lib/xactions/sync/scrapers/  # Institution-specific Playwright scraper modules
 priv/repo/migrations/  # Ecto migrations (9 total — see specs/001-personal-accounting/data-model.md)
 test/                  # ExUnit tests; test/fixtures/ofx/ for OFX parser fixtures
-specs/001-personal-accounting/  # Feature spec, plan, data model, contracts, quickstart
+specs/###-feature-name # Feature spec, plan, data model, contracts, quickstart
 ```
 
 ## Commands
@@ -32,6 +32,7 @@ mix test               # Run all tests
 mix test --exclude browser   # Skip Playwright scraper tests
 mix ecto.migrate       # Run pending migrations
 mix ecto.reset         # Drop + recreate + migrate + seed DB
+mix credo              # Run static code analysis
 ```
 
 ## Code Style

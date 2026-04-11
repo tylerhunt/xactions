@@ -1,26 +1,20 @@
 <!--
 SYNC IMPACT REPORT
 ==================
-Version change: (none) → 1.0.0 (initial ratification)
+Version change: 1.0.0 → 1.1.0
 
-Added sections:
-  - I. Code Quality
-  - II. Test-First Development (NON-NEGOTIABLE)
-  - III. Integration & Contract Testing
-  - IV. User Experience Consistency
-  - V. Performance Requirements
-  - Development Workflow
-  - Governance
+Modified principles:
+  - Development Workflow: added mandatory static analysis gate after tests pass
 
-Modified principles: N/A (initial)
-Removed sections: N/A (initial)
+Added sections: None
+Removed sections: None
 
 Templates reviewed:
   - .specify/templates/plan-template.md        ✅ Constitution Check section aligns
-  - .specify/templates/spec-template.md        ✅ Success Criteria section supports perf/UX goals
-  - .specify/templates/tasks-template.md       ✅ Test phases and parallel task structure align
+  - .specify/templates/spec-template.md        ✅ No changes required
+  - .specify/templates/tasks-template.md       ✅ No changes required
 
-Follow-up TODOs: None — all placeholders resolved.
+Follow-up TODOs: None
 -->
 
 # xactions Constitution
@@ -97,6 +91,9 @@ convention (`###-brief-description`).
 
 - Each PR MUST link to a spec and pass the Constitution Check in `plan.md`.
 - All tests MUST pass before review is requested.
+- Static analysis MUST pass after all tests are green and before review is requested.
+  Warnings that cannot be addressed immediately MUST be documented in the PR description
+  with a follow-up ticket.
 - PRs MUST NOT include unrelated changes or speculative improvements.
 - Commits MUST follow the 50/72 rule (subject line ≤50 chars, body lines ≤72 chars).
 
@@ -115,4 +112,4 @@ This constitution supersedes all other development guidance. Amendments require:
 All PRs and code reviews MUST verify compliance with this constitution. When in doubt,
 simpler is better and tests come first.
 
-**Version**: 1.0.0 | **Ratified**: 2026-04-09 | **Last Amended**: 2026-04-09
+**Version**: 1.1.0 | **Ratified**: 2026-04-09 | **Last Amended**: 2026-04-10
