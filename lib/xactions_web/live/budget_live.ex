@@ -350,16 +350,16 @@ defmodule XactionsWeb.BudgetLive do
         <% end %>
 
         <%!-- Envelope Table --%>
-        <div class="bg-white border border-black/[.08] rounded-xl overflow-hidden mb-6">
+        <div class="bg-white border border-black/[.08] rounded-xl mb-6">
           <table class="w-full">
             <thead>
               <tr class="border-b border-black/[.08] bg-[#ececea]/30">
-                <th class="text-left px-6 py-4 text-sm font-medium">Envelope</th>
+                <th class="text-left px-6 py-4 text-sm font-medium rounded-tl-xl">Envelope</th>
                 <th class="text-right px-6 py-4 text-sm font-medium">Budgeted</th>
                 <th class="text-right px-6 py-4 text-sm font-medium">Spent</th>
                 <th class="text-right px-6 py-4 text-sm font-medium">Balance</th>
                 <th class="px-6 py-4 text-sm font-medium">Progress</th>
-                <th class="px-6 py-4"></th>
+                <th class="px-6 py-4 rounded-tr-xl"></th>
               </tr>
             </thead>
             <tbody>
