@@ -69,7 +69,7 @@ defmodule Xactions.Reporting do
 
   @doc """
   Compares spending between the given month and the previous month by envelope.
-  Returns list of `%{envelope_name, current, previous, delta, pct}`.
+  Returns list of `%{envelope_name, current, previous, delta}`.
   """
   def month_over_month(month, year) do
     prev_date = Date.shift(Date.new!(year, month, 1), month: -1)
@@ -80,22 +80,11 @@ defmodule Xactions.Reporting do
       prev = Enum.find(previous, %{spent: Decimal.new("0")}, &(&1.envelope_name == curr.envelope_name))
       delta = Decimal.sub(curr.spent, prev.spent)
 
-      pct =
-        if Decimal.equal?(prev.spent, Decimal.new("0")) do
-          nil
-        else
-          delta
-          |> Decimal.div(prev.spent)
-          |> Decimal.mult(Decimal.new("100"))
-          |> Decimal.to_float()
-        end
-
       %{
         envelope_name: curr.envelope_name,
         current: curr.spent,
         previous: prev.spent,
-        delta: delta,
-        pct: pct
+        delta: delta
       }
     end)
   end

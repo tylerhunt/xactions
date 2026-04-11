@@ -290,16 +290,6 @@ defmodule Xactions.Budgeting do
   end
 
   @doc """
-  Removes a category assignment from an envelope.
-  """
-  def unassign_category(%BudgetEnvelope{} = envelope, category_id) do
-    case Repo.get_by(EnvelopeCategory, budget_envelope_id: envelope.id, category_id: category_id) do
-      nil -> {:ok, nil}
-      ec -> Repo.delete(ec)
-    end
-  end
-
-  @doc """
   Performs month rollover for all active envelopes:
   - fixed: copy same allocation amount
   - variable: copy previous month's allocated amount

@@ -1,7 +1,7 @@
 defmodule XactionsWeb.BudgetLive do
   use XactionsWeb, :live_view
 
-  alias Xactions.{Budgeting, Transactions}
+  alias Xactions.Budgeting
 
   @impl true
   def mount(_params, _session, socket) do
@@ -192,7 +192,6 @@ defmodule XactionsWeb.BudgetLive do
     total_spent = Budgeting.total_spent(date)
     unallocated = Decimal.sub(monthly_income, total_allocated)
     unassigned = Budgeting.list_unassigned_transactions(date)
-    categories = Transactions.list_categories()
     available_categories = Budgeting.list_available_categories()
 
     socket
@@ -202,7 +201,6 @@ defmodule XactionsWeb.BudgetLive do
     |> assign(:total_spent, total_spent)
     |> assign(:unallocated, unallocated)
     |> assign(:unassigned, unassigned)
-    |> assign(:categories, categories)
     |> assign(:available_categories, available_categories)
   end
 

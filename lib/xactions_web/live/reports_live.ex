@@ -1,7 +1,7 @@
 defmodule XactionsWeb.ReportsLive do
   use XactionsWeb, :live_view
 
-  alias Xactions.{Reporting, Transactions}
+  alias Xactions.Reporting
 
   @impl true
   def mount(_params, _session, socket) do
@@ -10,7 +10,6 @@ defmodule XactionsWeb.ReportsLive do
     {:ok,
      socket
      |> assign(:selected_month, today)
-     |> assign(:categories, Transactions.list_categories())
      |> load_report_data(today)}
   end
 
