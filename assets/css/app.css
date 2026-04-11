@@ -1,8 +1,10 @@
 @import "tailwindcss" source(none);
+@import "./avenui.css";
 
 @source "../css";
 @source "../js";
 @source "../../lib/xactions_web";
+@source "../../deps/aven_ui/lib/**/*.ex";
 
 /* A Tailwind plugin that makes "hero-#{ICON}" classes available.
    The heroicons installation itself is managed by your mix.exs */

@@ -86,6 +86,7 @@ defmodule XactionsWeb do
       import Phoenix.HTML
       # Core UI components
       import XactionsWeb.CoreComponents
+      import XactionsWeb.UI.Dropdown
 
       # Common modules used in templates
       alias Phoenix.LiveView.JS

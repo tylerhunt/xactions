@@ -396,13 +396,13 @@ defmodule XactionsWeb.BudgetLiveTest do
     test "each envelope row has a dropdown trigger", %{conn: conn} do
       env = budget_envelope!(%{name: "Rent", type: "fixed"})
       {:ok, view, _html} = live(conn, ~p"/budget")
-      assert has_element?(view, "[data-dropdown-trigger='#{env.id}']")
+      assert has_element?(view, "#env-menu-#{env.id}")
     end
 
     test "dropdown contains an edit item", %{conn: conn} do
       env = budget_envelope!(%{name: "Rent", type: "fixed"})
       {:ok, view, _html} = live(conn, ~p"/budget")
-      assert has_element?(view, "[data-dropdown-edit='#{env.id}']")
+      assert has_element?(view, "#env-menu-#{env.id} [phx-click='open_edit_envelope']")
     end
 
     test "dropdown contains an archive item", %{conn: conn} do
@@ -422,9 +422,7 @@ defmodule XactionsWeb.BudgetLiveTest do
       envelope_category!(%{budget_envelope_id: env.id, category_id: food_cat.id})
       {:ok, view, _html} = live(conn, ~p"/budget")
 
-      view
-      |> element("[data-dropdown-edit='#{env.id}']")
-      |> render_click()
+      render_click(view, "open_edit_envelope", %{"id" => to_string(env.id)})
 
       assert has_element?(view, "[data-edit-envelope-form]")
       html = element(view, "[data-form='edit-envelope']") |> render()
@@ -436,7 +434,7 @@ defmodule XactionsWeb.BudgetLiveTest do
       envelope_category!(%{budget_envelope_id: env.id, category_id: food_cat.id})
       {:ok, view, _html} = live(conn, ~p"/budget")
 
-      view |> element("[data-dropdown-edit='#{env.id}']") |> render_click()
+      render_click(view, "open_edit_envelope", %{"id" => to_string(env.id)})
 
       html = element(view, "[data-form='edit-envelope']") |> render()
       assert html =~ "checked"
@@ -447,7 +445,7 @@ defmodule XactionsWeb.BudgetLiveTest do
       envelope_category!(%{budget_envelope_id: env.id, category_id: food_cat.id})
       {:ok, view, _html} = live(conn, ~p"/budget")
 
-      view |> element("[data-dropdown-edit='#{env.id}']") |> render_click()
+      render_click(view, "open_edit_envelope", %{"id" => to_string(env.id)})
 
       view
       |> form("[data-form='edit-envelope']", %{
@@ -469,7 +467,7 @@ defmodule XactionsWeb.BudgetLiveTest do
       env = budget_envelope!(%{name: "Rent", type: "fixed"})
       {:ok, view, _html} = live(conn, ~p"/budget")
 
-      view |> element("[data-dropdown-edit='#{env.id}']") |> render_click()
+      render_click(view, "open_edit_envelope", %{"id" => to_string(env.id)})
 
       view
       |> form("[data-form='edit-envelope']", %{
@@ -485,7 +483,7 @@ defmodule XactionsWeb.BudgetLiveTest do
       envelope_category!(%{budget_envelope_id: env.id, category_id: food_cat.id})
       {:ok, view, _html} = live(conn, ~p"/budget")
 
-      view |> element("[data-dropdown-edit='#{env.id}']") |> render_click()
+      render_click(view, "open_edit_envelope", %{"id" => to_string(env.id)})
       assert has_element?(view, "[data-edit-envelope-form]")
 
       view |> element("button[phx-click='cancel_edit_envelope']") |> render_click()

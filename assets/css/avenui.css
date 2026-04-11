@@ -1,0 +1,203 @@
+/*
+ * AvenUI Design Tokens
+ * ====================
+ * Requires Tailwind v4 and Phoenix 1.8+.
+ *
+ * Setup in assets/css/app.css:
+ *
+ *   @import "tailwindcss";
+ *   @import "../../deps/aven_ui/assets/css/avenui.css";
+ *
+ * That's it. No tailwind.config.js needed.
+ */
+
+/* ─── Design tokens ─────────────────────────────────────────
+   Registered as Tailwind utility classes via @theme.
+   Use anywhere: bg-avn-purple, text-avn-foreground,
+   rounded-avn-lg, shadow-avn, border-avn-border, etc.
+   ─────────────────────────────────────────────────────────── */
+
+@theme {
+  /* Brand purple */
+  --color-avn-purple: #7c3aed;
+  --color-avn-purple-dark: #6d28d9;
+  --color-avn-purple-light: #ede9fe;
+  --color-avn-purple-50: #f5f3ff;
+  --color-avn-purple-100: #ede9fe;
+  --color-avn-purple-200: #ddd6fe;
+  --color-avn-purple-400: #a78bfa;
+  --color-avn-purple-500: #8b5cf6;
+  --color-avn-purple-600: #7c3aed;
+  --color-avn-purple-700: #6d28d9;
+  --color-avn-purple-800: #5b21b6;
+  --color-avn-purple-900: #4c1d95;
+
+  /* Surfaces */
+  --color-avn-background: #ffffff;
+  --color-avn-card: #ffffff;
+  --color-avn-muted: #f8f8f7;
+  --color-avn-muted-hover: #f1f0ef;
+
+  /* Text */
+  --color-avn-foreground: #0f0f0e;
+  --color-avn-muted-foreground: #737370;
+  --color-avn-placeholder: #a3a39f;
+
+  /* Border */
+  --color-avn-border: rgba(0, 0, 0, 0.1);
+
+  /* Radius */
+  --radius-avn: 6px;
+  --radius-avn-lg: 10px;
+  --radius-avn-xl: 14px;
+  --radius-avn-full: 9999px;
+
+  /* Shadows */
+  --shadow-avn-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-avn: 0 1px 3px 0 rgb(0 0 0 / 0.08), 0 1px 2px -1px rgb(0 0 0 / 0.05);
+  --shadow-avn-md:
+    0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+}
+
+/* ─── Raw CSS variables ──────────────────────────────────────
+   For direct var(--avn-*) usage in component styles.
+   These mirror the @theme tokens above.
+   ─────────────────────────────────────────────────────────── */
+
+:root {
+  --avn-purple-600: #7c3aed;
+  --avn-purple-700: #6d28d9;
+  --avn-background: #ffffff;
+  --avn-card: #ffffff;
+  --avn-muted: #f8f8f7;
+  --avn-foreground: #0f0f0e;
+  --avn-muted-foreground: #737370;
+  --avn-border: rgba(0, 0, 0, 0.1);
+  --avn-radius: 6px;
+  --avn-radius-lg: 10px;
+  --avn-radius-xl: 14px;
+
+  /* Z-index scale */
+  --avn-z-dropdown: 1000;
+  --avn-z-sticky: 1100;
+  --avn-z-overlay: 1200;
+  --avn-z-modal: 1300;
+  --avn-z-toast: 1400;
+  --avn-z-tooltip: 1500;
+}
+
+/* ─── Dark mode ──────────────────────────────────────────────
+   Toggle by adding .dark or data-theme="dark" to <html>.
+   Overrides both @theme tokens and :root variables.
+   ─────────────────────────────────────────────────────────── */
+
+@layer base {
+  .dark,
+  [data-theme="dark"] {
+    --color-avn-background: #0e0e0d;
+    --color-avn-card: #161615;
+    --color-avn-muted: #1d1d1c;
+    --color-avn-muted-hover: #252523;
+    --color-avn-foreground: #f5f5f4;
+    --color-avn-muted-foreground: #8a8a85;
+    --color-avn-placeholder: #5a5a56;
+    --color-avn-border: rgba(255, 255, 255, 0.09);
+
+    --avn-background: #0e0e0d;
+    --avn-card: #161615;
+    --avn-muted: #1d1d1c;
+    --avn-foreground: #f5f5f4;
+    --avn-muted-foreground: #8a8a85;
+    --avn-border: rgba(255, 255, 255, 0.09);
+  }
+}
+
+/* ─── Base resets ────────────────────────────────────────────── */
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    /* Smooth dark mode transitions — layout props excluded */
+    transition-property:
+      color, background-color, border-color, outline-color, fill, stroke;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 100ms;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  :focus {
+    outline: none;
+  }
+  :focus-visible {
+    outline: 2px solid var(--avn-purple-600);
+    outline-offset: 2px;
+  }
+}
+
+/* ─── Utility classes ────────────────────────────────────────── */
+
+@layer components {
+  .avn-card {
+    background: var(--avn-card);
+    border: 1px solid var(--avn-border);
+    border-radius: var(--avn-radius-lg);
+  }
+
+  .avn-input {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    background: var(--avn-background);
+    border: 1px solid var(--avn-border);
+    border-radius: var(--avn-radius);
+    color: var(--avn-foreground);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    transition:
+      border-color 150ms,
+      box-shadow 150ms;
+  }
+
+  .avn-input:focus {
+    border-color: var(--avn-purple-600);
+    box-shadow: 0 0 0 3px
+      color-mix(in srgb, var(--avn-purple-600) 20%, transparent);
+    outline: none;
+  }
+}
+
+/* ─── LiveView performance helpers ──────────────────────────── */
+
+[phx-update="stream"] > * {
+  will-change: auto;
+  contain: layout style;
+}
+
+.phx-loading [data-avn-page-content] {
+  opacity: 0.6;
+  pointer-events: none;
+  transition: opacity 200ms;
+}
+
+.avn-flash-container {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  z-index: var(--avn-z-toast);
+  pointer-events: none;
+}
+
+.avn-flash-container > * {
+  pointer-events: auto;
+}

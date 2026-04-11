@@ -45,29 +45,20 @@ defmodule XactionsWeb.Layouts do
         </div>
         <div class="flex items-center gap-2">
           <%!-- User menu --%>
-          <div class="relative" id="user-menu" phx-hook="Dropdown">
-            <button
-              class="p-2 rounded-lg hover:bg-[#ececea] transition-colors"
-              id="user-menu-btn"
-              data-dropdown-trigger
+          <.dropdown id="user-menu" align="right">
+            <:trigger>
+              <button class="p-2 rounded-lg hover:bg-[#ececea] transition-colors">
+                <.icon name="hero-user-circle" class="size-6" />
+              </button>
+            </:trigger>
+            <.link
+              href={~p"/logout"}
+              method="delete"
+              class="block px-3 py-2 text-sm text-avn-foreground hover:bg-avn-muted transition-colors"
             >
-              <.icon name="hero-user-circle" class="size-6" />
-            </button>
-            <div
-              id="user-menu-dropdown"
-              data-dropdown-panel
-              phx-update="ignore"
-              class="hidden absolute right-0 mt-1 w-40 bg-white border border-black/[.08] rounded-xl shadow-lg z-20 py-1"
-            >
-              <.link
-                href={~p"/logout"}
-                method="delete"
-                class="block px-4 py-2 text-sm hover:text-[#030213] hover:bg-[#ececea]/50 transition-colors"
-              >
-                Sign Out
-              </.link>
-            </div>
-          </div>
+              Sign Out
+            </.link>
+          </.dropdown>
           <%!-- Mobile nav hamburger --%>
           <div class="sm:hidden relative" id="mobile-menu">
             <button

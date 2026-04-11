@@ -390,35 +390,21 @@ defmodule XactionsWeb.BudgetLive do
                           </div>
                         <% end %>
                       </div>
-                      <div class="relative ml-1" id={"env-menu-#{env.id}"} phx-hook="Dropdown">
-                        <button
-                          class="p-1 hover:bg-[#ececea] rounded transition-colors"
-                          data-dropdown-trigger
-                        >
-                          <.icon name="hero-chevron-down" class="size-4 text-gray-400" />
-                        </button>
-                        <div
-                          id={"dropdown-#{env.id}"}
-                          data-dropdown-panel
-                          phx-update="ignore"
-                          class="hidden absolute left-0 top-full mt-1 min-w-[10rem] bg-white border border-black/[.08] rounded-lg shadow-lg py-1 z-10"
-                        >
-                          <button
-                            phx-click="open_edit_envelope"
-                            phx-value-id={env.id}
-                            class="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-[#ececea]/60 transition-colors"
-                          >
-                            <.icon name="hero-pencil" class="size-4" /> Edit
+                      <.dropdown id={"env-menu-#{env.id}"} class="ml-1">
+                        <:trigger>
+                          <button class="p-1 hover:bg-[#ececea] rounded transition-colors">
+                            <.icon name="hero-chevron-down" class="size-4 text-gray-400" />
                           </button>
-                          <button
-                            phx-click="archive_envelope"
-                            phx-value-id={env.id}
-                            class="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-[#ececea]/60 transition-colors text-[#d4183d]"
-                          >
-                            <.icon name="hero-archive-box" class="size-4" /> Archive
-                          </button>
-                        </div>
-                      </div>
+                        </:trigger>
+                        <.dropdown_item phx-click="open_edit_envelope" phx-value-id={env.id}>
+                          <:icon><.icon name="hero-pencil" class="size-4" /></:icon>
+                          Edit
+                        </.dropdown_item>
+                        <.dropdown_item variant="danger" phx-click="archive_envelope" phx-value-id={env.id}>
+                          <:icon><.icon name="hero-archive-box" class="size-4" /></:icon>
+                          Archive
+                        </.dropdown_item>
+                      </.dropdown>
                     </div>
                   </td>
                   <td class="px-6 py-4 text-right">

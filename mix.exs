@@ -40,6 +40,7 @@ defmodule Xactions.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:aven_ui, "~> 0.1"},
       {:phoenix, "~> 1.8.5"},
       {:phoenix_ecto, "~> 4.5"},
       {:ecto_sql, "~> 3.13"},
