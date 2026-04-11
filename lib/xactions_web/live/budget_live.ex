@@ -124,25 +124,6 @@ defmodule XactionsWeb.BudgetLive do
     end
   end
 
-  defp do_update_envelope(socket, nil, _attrs, _ids), do: {:noreply, socket}
-
-  defp do_update_envelope(socket, env, attrs, category_ids) do
-    case Budgeting.update_envelope(env, attrs, category_ids) do
-      {:ok, _} ->
-        {:noreply,
-         socket
-         |> assign(:editing_envelope, nil)
-         |> assign(:show_edit_form, false)
-         |> load_budget_data(socket.assigns.date)}
-
-      {:error, changeset} when is_struct(changeset, Ecto.Changeset) ->
-        {:noreply, put_flash(socket, :error, changeset_error(changeset))}
-
-      {:error, _reason} ->
-        {:noreply, put_flash(socket, :error, "Could not update envelope")}
-    end
-  end
-
   @impl true
   def handle_event("archive_envelope", %{"id" => id}, socket) do
     env = Enum.find(socket.assigns.envelopes, &(&1.id == String.to_integer(id)))
@@ -174,6 +155,25 @@ defmodule XactionsWeb.BudgetLive do
       end
     else
       {:noreply, socket}
+    end
+  end
+
+  defp do_update_envelope(socket, nil, _attrs, _ids), do: {:noreply, socket}
+
+  defp do_update_envelope(socket, env, attrs, category_ids) do
+    case Budgeting.update_envelope(env, attrs, category_ids) do
+      {:ok, _} ->
+        {:noreply,
+         socket
+         |> assign(:editing_envelope, nil)
+         |> assign(:show_edit_form, false)
+         |> load_budget_data(socket.assigns.date)}
+
+      {:error, changeset} when is_struct(changeset, Ecto.Changeset) ->
+        {:noreply, put_flash(socket, :error, changeset_error(changeset))}
+
+      {:error, _reason} ->
+        {:noreply, put_flash(socket, :error, "Could not update envelope")}
     end
   end
 

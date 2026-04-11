@@ -91,7 +91,7 @@ defmodule Xactions.Sync.SyncWorker do
     {accounts_updated, added, modified}
   end
 
-  defp account_for_transaction(account_map, institution, txn_attrs) do
+  defp account_for_transaction(account_map, _institution, txn_attrs) do
     case Map.values(account_map) do
       [single] -> single
       _ ->
@@ -135,7 +135,7 @@ defmodule Xactions.Sync.SyncWorker do
   defp resolve_scraper(%Institution{scraper_module: mod}) when is_binary(mod) do
     String.to_existing_atom("Elixir.#{mod}")
   rescue
-    e -> reraise "Unknown scraper module: #{mod}", __STACKTRACE__
+    _e -> reraise "Unknown scraper module: #{mod}", __STACKTRACE__
   end
 
   defp start_log(institution) do

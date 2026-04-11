@@ -8,7 +8,7 @@ defmodule Xactions.Reporting do
   alias Xactions.Repo
   alias Xactions.Accounts.Account
   alias Xactions.Transactions.Transaction
-  alias Xactions.Budgeting.{BudgetEnvelope, EnvelopeCategory}
+  alias Xactions.Budgeting.BudgetEnvelope
 
   @asset_types ~w(checking savings brokerage investment cash)
   @liability_types ~w(credit_card loan mortgage)

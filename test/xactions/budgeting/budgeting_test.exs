@@ -228,7 +228,7 @@ defmodule Xactions.Budgeting.BudgetingTest do
       assert Decimal.equal?(bm.allocated_amount, Decimal.new("300.00"))
     end
 
-    test "rollover cap limits carry-forward surplus", %{account: account, food_cat: food_cat} do
+    test "rollover cap limits carry-forward surplus", %{food_cat: food_cat} do
       env =
         budget_envelope!(%{
           name: "Vacation",

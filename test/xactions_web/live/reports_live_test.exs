@@ -2,7 +2,6 @@ defmodule XactionsWeb.ReportsLiveTest do
   use XactionsWeb.ConnCase
 
   import Phoenix.LiveViewTest
-  import Xactions.Fixtures
 
   @today Date.utc_today()
 

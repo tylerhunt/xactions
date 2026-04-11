@@ -3,8 +3,6 @@ defmodule XactionsWeb.Components.AccountCard do
 
   use Phoenix.Component
 
-  alias XactionsWeb.Components.SyncStatusBadge
-  import SyncStatusBadge
 
   attr :account, :map, required: true
 

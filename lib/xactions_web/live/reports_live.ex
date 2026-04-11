@@ -1,7 +1,7 @@
 defmodule XactionsWeb.ReportsLive do
   use XactionsWeb, :live_view
 
-  alias Xactions.{Reporting, Budgeting, Transactions}
+  alias Xactions.{Reporting, Transactions}
 
   @impl true
   def mount(_params, _session, socket) do

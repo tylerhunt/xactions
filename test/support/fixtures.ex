@@ -3,7 +3,7 @@ defmodule Xactions.Fixtures do
 
   alias Xactions.Repo
   alias Xactions.Accounts.{Institution, Account}
-  alias Xactions.Transactions.{Category, Transaction, TransactionSplit}
+  alias Xactions.Transactions.{Category, Transaction}
   alias Xactions.Portfolio.Holding
   alias Xactions.Budgeting.{BudgetEnvelope, BudgetMonth, EnvelopeCategory}
 
