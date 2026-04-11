@@ -1,4 +1,4 @@
-defmodule XactionsWeb.LoginLiveTest do
+defmodule XactionsWeb.LoginTest do
   use XactionsWeb.ConnCase
 
   describe "mount" do
