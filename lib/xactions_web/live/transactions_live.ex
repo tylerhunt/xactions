@@ -156,7 +156,7 @@ defmodule XactionsWeb.TransactionsLive do
           class="flex flex-wrap gap-3 mb-6 items-end"
         >
           <div>
-            <label class="block text-xs text-[#717182] mb-1">Account</label>
+            <label class="block text-xs mb-1">Account</label>
             <select
               name="filters[account_id]"
               class="border border-black/[.08] rounded-lg px-3 py-2 text-sm bg-white"
@@ -170,7 +170,7 @@ defmodule XactionsWeb.TransactionsLive do
             </select>
           </div>
           <div>
-            <label class="block text-xs text-[#717182] mb-1">From</label>
+            <label class="block text-xs mb-1">From</label>
             <input
               type="date"
               name="filters[date_from]"
@@ -179,7 +179,7 @@ defmodule XactionsWeb.TransactionsLive do
             />
           </div>
           <div>
-            <label class="block text-xs text-[#717182] mb-1">To</label>
+            <label class="block text-xs mb-1">To</label>
             <input
               type="date"
               name="filters[date_to]"
@@ -188,7 +188,7 @@ defmodule XactionsWeb.TransactionsLive do
             />
           </div>
           <div>
-            <label class="block text-xs text-[#717182] mb-1">Search</label>
+            <label class="block text-xs mb-1">Search</label>
             <input
               type="text"
               name="filters[query]"
@@ -210,7 +210,7 @@ defmodule XactionsWeb.TransactionsLive do
             <form phx-submit="add_manual_transaction" data-form="add-transaction">
               <div class="grid grid-cols-2 gap-3">
                 <div>
-                  <label class="block text-xs text-[#717182] mb-1">Account</label>
+                  <label class="block text-xs mb-1">Account</label>
                   <select
                     name="transaction[account_id]"
                     class="w-full border border-black/[.08] rounded-lg px-3 py-2 text-sm bg-white"
@@ -221,7 +221,7 @@ defmodule XactionsWeb.TransactionsLive do
                   </select>
                 </div>
                 <div>
-                  <label class="block text-xs text-[#717182] mb-1">Date</label>
+                  <label class="block text-xs mb-1">Date</label>
                   <input
                     type="date"
                     name="transaction[date]"
@@ -229,7 +229,7 @@ defmodule XactionsWeb.TransactionsLive do
                   />
                 </div>
                 <div>
-                  <label class="block text-xs text-[#717182] mb-1">Amount</label>
+                  <label class="block text-xs mb-1">Amount</label>
                   <input
                     type="text"
                     name="transaction[amount]"
@@ -238,7 +238,7 @@ defmodule XactionsWeb.TransactionsLive do
                   />
                 </div>
                 <div>
-                  <label class="block text-xs text-[#717182] mb-1">Merchant</label>
+                  <label class="block text-xs mb-1">Merchant</label>
                   <input
                     type="text"
                     name="transaction[merchant_name]"
@@ -246,7 +246,7 @@ defmodule XactionsWeb.TransactionsLive do
                   />
                 </div>
                 <div>
-                  <label class="block text-xs text-[#717182] mb-1">Category</label>
+                  <label class="block text-xs mb-1">Category</label>
                   <select
                     name="transaction[category_id]"
                     class="w-full border border-black/[.08] rounded-lg px-3 py-2 text-sm bg-white"
@@ -267,7 +267,7 @@ defmodule XactionsWeb.TransactionsLive do
                 </button>
                 <button
                   type="button"
-                  class="px-4 py-2 hover:bg-[#ececea] rounded-lg text-sm transition-colors text-[#717182] hover:text-[#030213]"
+                  class="px-4 py-2 hover:bg-[#ececea] rounded-lg text-sm transition-colors hover:text-[#030213]"
                   phx-click="cancel_add_transaction"
                 >
                   Cancel
@@ -279,7 +279,7 @@ defmodule XactionsWeb.TransactionsLive do
 
         <%!-- Transaction list --%>
         <%= if @transactions == [] do %>
-          <div class="text-center py-16 text-[#717182]">No transactions found.</div>
+          <div class="text-center py-16">No transactions found.</div>
         <% else %>
           <div class="bg-white border border-black/[.08] rounded-xl overflow-hidden">
             <div class="divide-y divide-black/[.04]">
@@ -297,7 +297,7 @@ defmodule XactionsWeb.TransactionsLive do
           <%= if @has_more do %>
             <div class="flex justify-center mt-6">
               <button
-                class="px-4 py-2 hover:bg-[#ececea] rounded-lg text-sm transition-colors text-[#717182] hover:text-[#030213]"
+                class="px-4 py-2 hover:bg-[#ececea] rounded-lg text-sm transition-colors hover:text-[#030213]"
                 phx-click="load_more"
               >
                 Load more
@@ -319,7 +319,7 @@ defmodule XactionsWeb.TransactionsLive do
     >
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-3">
-          <span class="text-sm text-[#717182] w-24 shrink-0">
+          <span class="text-sm w-24 shrink-0">
             {@txn.date}
           </span>
           <span class="text-sm font-medium text-[#030213]" data-merchant={@txn.merchant_name}>
@@ -328,7 +328,7 @@ defmodule XactionsWeb.TransactionsLive do
           <%= if @txn.is_split do %>
             <span
               data-split-badge
-              class="text-xs font-medium px-2 py-0.5 rounded-full bg-[#717182]/10 text-[#717182]"
+              class="text-xs font-medium px-2 py-0.5 rounded-full bg-[#717182]/10"
             >
               split
             </span>
@@ -336,7 +336,7 @@ defmodule XactionsWeb.TransactionsLive do
         </div>
         <div class="flex items-center gap-3">
           <%= if @txn.category && !@editing do %>
-            <span class="text-xs text-[#717182]" data-category={@txn.category.name}>
+            <span class="text-xs" data-category={@txn.category.name}>
               {@txn.category.name}
             </span>
           <% end %>
@@ -346,14 +346,14 @@ defmodule XactionsWeb.TransactionsLive do
           <div class="flex gap-1">
             <%= unless @txn.is_split do %>
               <button
-                class="px-2 py-1 hover:bg-[#ececea] rounded text-xs text-[#717182] hover:text-[#030213] transition-colors"
+                class="px-2 py-1 hover:bg-[#ececea] rounded text-xs hover:text-[#030213] transition-colors"
                 phx-click="edit_category"
                 phx-value-id={@txn.id}
               >
                 Cat
               </button>
               <button
-                class="px-2 py-1 hover:bg-[#ececea] rounded text-xs text-[#717182] hover:text-[#030213] transition-colors"
+                class="px-2 py-1 hover:bg-[#ececea] rounded text-xs hover:text-[#030213] transition-colors"
                 phx-click="open_split"
                 phx-value-id={@txn.id}
               >
@@ -393,7 +393,7 @@ defmodule XactionsWeb.TransactionsLive do
       <%!-- Split editor --%>
       <%= if @split_open do %>
         <div class="mt-2 p-3 bg-[#ececea]/50 rounded-lg" data-split-editor={@txn.id}>
-          <p class="text-xs text-[#717182] mb-2">
+          <p class="text-xs mb-2">
             Split total: {format_amount(@txn.amount)}
           </p>
           <button
@@ -404,7 +404,7 @@ defmodule XactionsWeb.TransactionsLive do
             Save split
           </button>
           <button
-            class="px-3 py-1.5 hover:bg-[#ececea] rounded-lg text-xs text-[#717182] hover:text-[#030213] transition-colors ml-2"
+            class="px-3 py-1.5 hover:bg-[#ececea] rounded-lg text-xs hover:text-[#030213] transition-colors ml-2"
             phx-click="cancel_split"
           >
             Cancel

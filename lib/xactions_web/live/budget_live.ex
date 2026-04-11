@@ -157,28 +157,28 @@ defmodule XactionsWeb.BudgetLive do
             data-summary="income"
             class="bg-white border border-black/[.08] rounded-xl p-5"
           >
-            <div class="text-sm text-[#717182] mb-1">Monthly Income</div>
+            <div class="text-sm mb-1">Monthly Income</div>
             <div class="text-3xl tracking-tight">{format_money(@monthly_income)}</div>
           </div>
           <div
             data-summary="allocated"
             class="bg-white border border-black/[.08] rounded-xl p-5"
           >
-            <div class="text-sm text-[#717182] mb-1">Allocated</div>
+            <div class="text-sm mb-1">Allocated</div>
             <div class="text-3xl tracking-tight">{format_money(@total_allocated)}</div>
           </div>
           <div
             data-summary="spent"
             class="bg-white border border-black/[.08] rounded-xl p-5"
           >
-            <div class="text-sm text-[#717182] mb-1">Spent</div>
+            <div class="text-sm mb-1">Spent</div>
             <div class="text-3xl tracking-tight">{format_money(@total_spent)}</div>
           </div>
           <div
             data-summary="unallocated"
             class="bg-white border border-black/[.08] rounded-xl p-5"
           >
-            <div class="text-sm text-[#717182] mb-1">Unallocated</div>
+            <div class="text-sm mb-1">Unallocated</div>
             <div
               class="text-3xl tracking-tight"
               style={"color: #{unallocated_color(@unallocated)}"}
@@ -192,7 +192,7 @@ defmodule XactionsWeb.BudgetLive do
         <div class="flex items-center justify-between mb-5">
           <h3 class="text-lg font-medium">Envelopes</h3>
           <div class="flex items-center gap-3">
-            <span class="text-sm text-[#717182]">{length(@envelopes)} active</span>
+            <span class="text-sm">{length(@envelopes)} active</span>
             <button
               phx-click="open_create_envelope"
               class="px-4 py-2 bg-[#ececea] hover:bg-[#ececea]/80 rounded-lg text-sm transition-colors"
@@ -209,7 +209,7 @@ defmodule XactionsWeb.BudgetLive do
             <form phx-submit="create_envelope" data-form="create-envelope">
               <div class="grid grid-cols-2 gap-3 mb-4">
                 <div>
-                  <label class="text-xs text-[#717182] block mb-1">Name</label>
+                  <label class="text-xs block mb-1">Name</label>
                   <input
                     type="text"
                     name="envelope[name]"
@@ -218,7 +218,7 @@ defmodule XactionsWeb.BudgetLive do
                   />
                 </div>
                 <div>
-                  <label class="text-xs text-[#717182] block mb-1">Type</label>
+                  <label class="text-xs block mb-1">Type</label>
                   <select
                     name="envelope[type]"
                     class="w-full border border-black/[.08] rounded-lg px-3 py-2 text-sm bg-white"
@@ -253,11 +253,11 @@ defmodule XactionsWeb.BudgetLive do
           <table class="w-full">
             <thead>
               <tr class="border-b border-black/[.08] bg-[#ececea]/30">
-                <th class="text-left px-6 py-4 text-sm text-[#717182] font-medium">Envelope</th>
-                <th class="text-right px-6 py-4 text-sm text-[#717182] font-medium">Budgeted</th>
-                <th class="text-right px-6 py-4 text-sm text-[#717182] font-medium">Spent</th>
-                <th class="text-right px-6 py-4 text-sm text-[#717182] font-medium">Balance</th>
-                <th class="px-6 py-4 text-sm text-[#717182] font-medium">Progress</th>
+                <th class="text-left px-6 py-4 text-sm font-medium">Envelope</th>
+                <th class="text-right px-6 py-4 text-sm font-medium">Budgeted</th>
+                <th class="text-right px-6 py-4 text-sm font-medium">Spent</th>
+                <th class="text-right px-6 py-4 text-sm font-medium">Balance</th>
+                <th class="px-6 py-4 text-sm font-medium">Progress</th>
                 <th class="px-6 py-4"></th>
               </tr>
             </thead>
@@ -304,7 +304,7 @@ defmodule XactionsWeb.BudgetLive do
                         </form>
                         <button
                           phx-click="cancel_edit"
-                          class="text-xs text-[#717182] hover:text-[#030213] px-1"
+                          class="text-xs hover:text-[#030213] px-1"
                         >
                           ✕
                         </button>
@@ -340,7 +340,7 @@ defmodule XactionsWeb.BudgetLive do
                         >
                         </div>
                       </div>
-                      <span class="text-xs text-[#717182] w-10 text-right">
+                      <span class="text-xs w-10 text-right">
                         {round(pct)}%
                       </span>
                     </div>
@@ -349,7 +349,7 @@ defmodule XactionsWeb.BudgetLive do
                     <button
                       phx-click="archive_envelope"
                       phx-value-id={env.id}
-                      class="text-xs text-[#717182] hover:text-[#d4183d] transition-colors"
+                      class="text-xs hover:text-[#d4183d] transition-colors"
                     >
                       Archive
                     </button>
@@ -373,7 +373,7 @@ defmodule XactionsWeb.BudgetLive do
               <%= for txn <- @unassigned do %>
                 <div class="flex items-center justify-between px-6 py-3 text-sm">
                   <span>{txn.merchant_name}</span>
-                  <span class="font-mono text-[#717182]">
+                  <span class="font-mono">
                     {format_money(Decimal.abs(txn.amount))}
                   </span>
                 </div>

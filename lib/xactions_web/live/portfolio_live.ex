@@ -52,15 +52,15 @@ defmodule XactionsWeb.PortfolioLive do
         <%!-- Summary cards --%>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <div data-summary="total-value" class="bg-white border border-black/[.08] rounded-xl p-5">
-            <div class="text-sm text-[#717182] mb-1">Total Value</div>
+            <div class="text-sm mb-1">Total Value</div>
             <div class="text-2xl tracking-tight">{format_decimal(@total_value)}</div>
           </div>
           <div data-summary="cost-basis" class="bg-white border border-black/[.08] rounded-xl p-5">
-            <div class="text-sm text-[#717182] mb-1">Cost Basis</div>
+            <div class="text-sm mb-1">Cost Basis</div>
             <div class="text-2xl tracking-tight">{format_decimal(@total_cost_basis)}</div>
           </div>
           <div data-summary="gain-loss" class="bg-white border border-black/[.08] rounded-xl p-5">
-            <div class="text-sm text-[#717182] mb-1">Unrealized Gain/Loss</div>
+            <div class="text-sm mb-1">Unrealized Gain/Loss</div>
             <div class={["text-2xl tracking-tight", gain_loss_class(@total_gain_loss)]}>
               {format_decimal(@total_gain_loss)}
             </div>
@@ -75,7 +75,7 @@ defmodule XactionsWeb.PortfolioLive do
                 "px-3 py-1.5 rounded-lg text-sm transition-colors",
                 if(@period == period,
                   do: "bg-[#030213] text-white",
-                  else: "hover:bg-[#ececea] text-[#717182] hover:text-[#030213]"
+                  else: "hover:bg-[#ececea] hover:text-[#030213]"
                 )
               ]}
               phx-click="set_period"
@@ -91,28 +91,28 @@ defmodule XactionsWeb.PortfolioLive do
 
         <%!-- Holdings list --%>
         <%= if @holdings == [] do %>
-          <div class="text-center py-16 text-[#717182]">No holdings found.</div>
+          <div class="text-center py-16">No holdings found.</div>
         <% else %>
           <div class="bg-white border border-black/[.08] rounded-xl overflow-hidden mb-6">
             <table class="w-full text-sm">
               <thead>
                 <tr class="border-b border-black/[.06]">
-                  <th class="px-5 py-3 text-left text-xs font-medium text-[#717182] uppercase tracking-wider">
+                  <th class="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider">
                     Symbol
                   </th>
-                  <th class="px-5 py-3 text-left text-xs font-medium text-[#717182] uppercase tracking-wider">
+                  <th class="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider">
                     Name
                   </th>
-                  <th class="px-5 py-3 text-right text-xs font-medium text-[#717182] uppercase tracking-wider">
+                  <th class="px-5 py-3 text-right text-xs font-medium uppercase tracking-wider">
                     Shares
                   </th>
-                  <th class="px-5 py-3 text-right text-xs font-medium text-[#717182] uppercase tracking-wider">
+                  <th class="px-5 py-3 text-right text-xs font-medium uppercase tracking-wider">
                     Price
                   </th>
-                  <th class="px-5 py-3 text-right text-xs font-medium text-[#717182] uppercase tracking-wider">
+                  <th class="px-5 py-3 text-right text-xs font-medium uppercase tracking-wider">
                     Value
                   </th>
-                  <th class="px-5 py-3 text-right text-xs font-medium text-[#717182] uppercase tracking-wider">
+                  <th class="px-5 py-3 text-right text-xs font-medium uppercase tracking-wider">
                     Gain/Loss
                   </th>
                 </tr>
@@ -152,7 +152,7 @@ defmodule XactionsWeb.PortfolioLive do
                 <div class="flex-1 bg-[#ececea] rounded h-2">
                   <div class="bg-[#030213] rounded h-2" style={"width: #{item.pct}%"}></div>
                 </div>
-                <span class="text-sm text-[#717182] w-16 text-right">
+                <span class="text-sm w-16 text-right">
                   {:erlang.float_to_binary(item.pct, decimals: 1)}%
                 </span>
                 <span class="font-mono text-sm text-[#030213] w-24 text-right">

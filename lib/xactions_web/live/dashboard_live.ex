@@ -85,7 +85,7 @@ defmodule XactionsWeb.DashboardLive do
           <h1 class="text-2xl tracking-tight">Dashboard</h1>
           <button
             data-sync-all-btn
-            class="px-4 py-2 hover:bg-[#ececea] rounded-lg text-sm transition-colors text-[#717182] hover:text-[#030213]"
+            class="px-4 py-2 hover:bg-[#ececea] rounded-lg text-sm transition-colors hover:text-[#030213]"
             phx-click="sync_all"
           >
             Sync All
@@ -95,7 +95,7 @@ defmodule XactionsWeb.DashboardLive do
         <%!-- Net Worth Summary Card --%>
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
           <div data-summary="net-worth" class="bg-white border border-black/[.08] rounded-xl p-5">
-            <div class="text-sm text-[#717182] mb-1">Net Worth</div>
+            <div class="text-sm mb-1">Net Worth</div>
             <div class="text-3xl tracking-tight">
               ${Decimal.to_string(Decimal.round(@net_worth, 2))}
             </div>
@@ -117,7 +117,7 @@ defmodule XactionsWeb.DashboardLive do
                     <.sync_status_badge status={institution.status} />
                   </div>
                   <button
-                    class="p-1.5 rounded hover:bg-[#ececea] transition-colors text-[#717182] hover:text-[#030213] text-xs"
+                    class="p-1.5 rounded hover:bg-[#ececea] transition-colors hover:text-[#030213] text-xs"
                     phx-click="sync_now"
                     phx-value-id={institution.id}
                   >

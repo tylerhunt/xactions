@@ -17,7 +17,7 @@ defmodule XactionsWeb.Components.AccountCard do
     >
       <div>
         <span class="font-medium text-sm">{@account.name}</span>
-        <span class="text-xs text-[#717182] ml-2">{account_type_label(@account.type)}</span>
+        <span class="text-xs ml-2">{account_type_label(@account.type)}</span>
       </div>
       <span class={balance_class(@account)} data-account-balance={@account.id}>
         {format_balance(@account.balance)}

@@ -64,7 +64,7 @@ defmodule XactionsWeb.MfaLive do
       >
         <div class="bg-white border border-black/[.08] rounded-xl p-6 w-full max-w-sm mx-4">
           <h3 class="font-medium text-[#030213] text-lg mb-2">Two-Factor Authentication</h3>
-          <p class="text-sm text-[#717182] mb-4">
+          <p class="text-sm mb-4">
             {mfa_prompt(mfa_type)}
           </p>
           <input
@@ -79,7 +79,7 @@ defmodule XactionsWeb.MfaLive do
           />
           <div class="flex gap-2 justify-end">
             <button
-              class="px-4 py-2 hover:bg-[#ececea] rounded-lg text-sm text-[#717182] hover:text-[#030213] transition-colors"
+              class="px-4 py-2 hover:bg-[#ececea] rounded-lg text-sm hover:text-[#030213] transition-colors"
               phx-click="dismiss_mfa"
               phx-value-id={institution_id}
             >

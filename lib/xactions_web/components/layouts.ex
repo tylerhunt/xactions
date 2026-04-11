@@ -51,7 +51,7 @@ defmodule XactionsWeb.Layouts do
               id="user-menu-btn"
               phx-click={JS.toggle(to: "#user-menu-dropdown")}
             >
-              <.icon name="hero-user-circle" class="size-6 text-[#717182]" />
+              <.icon name="hero-user-circle" class="size-6" />
             </button>
             <div
               id="user-menu-dropdown"
@@ -60,7 +60,7 @@ defmodule XactionsWeb.Layouts do
               <.link
                 href={~p"/logout"}
                 method="delete"
-                class="block px-4 py-2 text-sm text-[#717182] hover:text-[#030213] hover:bg-[#ececea]/50 transition-colors"
+                class="block px-4 py-2 text-sm hover:text-[#030213] hover:bg-[#ececea]/50 transition-colors"
               >
                 Sign Out
               </.link>
@@ -72,7 +72,7 @@ defmodule XactionsWeb.Layouts do
               class="p-2 rounded-lg hover:bg-[#ececea] transition-colors"
               phx-click={JS.toggle(to: "#mobile-menu-dropdown")}
             >
-              <.icon name="hero-bars-3" class="size-5 text-[#717182]" />
+              <.icon name="hero-bars-3" class="size-5" />
             </button>
             <div
               id="mobile-menu-dropdown"
@@ -122,7 +122,7 @@ defmodule XactionsWeb.Layouts do
 
     if path == current_path,
       do: base <> " bg-[#ececea] text-[#030213]",
-      else: base <> " text-[#717182] hover:text-[#030213] hover:bg-[#ececea]/50"
+      else: base <> " hover:text-[#030213] hover:bg-[#ececea]/50"
   end
 
   defp mobile_nav_link_class(path, current_path) do
@@ -130,7 +130,7 @@ defmodule XactionsWeb.Layouts do
 
     if path == current_path,
       do: base <> " bg-[#ececea] text-[#030213]",
-      else: base <> " text-[#717182] hover:text-[#030213] hover:bg-[#ececea]/50"
+      else: base <> " hover:text-[#030213] hover:bg-[#ececea]/50"
   end
 
   @doc """
@@ -183,8 +183,8 @@ defmodule XactionsWeb.Layouts do
   """
   def theme_toggle(assigns) do
     ~H"""
-    <div class="card relative flex flex-row items-center border-2 border-base-300 bg-base-300 rounded-full">
-      <div class="absolute w-1/3 h-full rounded-full border-1 border-base-200 bg-base-100 brightness-200 left-0 [[data-theme=light]_&]:left-1/3 [[data-theme=dark]_&]:left-2/3 transition-[left]" />
+    <div class="relative flex flex-row items-center border border-black/10 bg-black/[.06] rounded-full">
+      <div class="absolute w-1/3 h-full rounded-full border border-black/5 bg-white left-0 [[data-theme=light]_&]:left-1/3 [[data-theme=dark]_&]:left-2/3 transition-[left]" />
 
       <button
         class="flex p-2 cursor-pointer w-1/3"

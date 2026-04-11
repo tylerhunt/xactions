@@ -31,10 +31,10 @@ defmodule XactionsWeb.Components.SyncStatusBadge do
     do: "text-xs font-medium px-2 py-0.5 rounded-full bg-[#d4183d]/10 text-[#d4183d]"
 
   defp badge_class("inactive"),
-    do: "text-xs font-medium px-2 py-0.5 rounded-full bg-[#717182]/10 text-[#717182]"
+    do: "text-xs font-medium px-2 py-0.5 rounded-full bg-[#717182]/10"
 
   defp badge_class(_),
-    do: "text-xs font-medium px-2 py-0.5 rounded-full bg-[#717182]/10 text-[#717182]"
+    do: "text-xs font-medium px-2 py-0.5 rounded-full bg-[#717182]/10"
 
   defp label("active"), do: "Active"
   defp label("syncing"), do: "Syncing…"

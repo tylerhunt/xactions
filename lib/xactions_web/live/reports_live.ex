@@ -70,7 +70,7 @@ defmodule XactionsWeb.ReportsLive do
         <%!-- Net Worth summary card --%>
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
           <div data-summary="net-worth" class="bg-white border border-black/[.08] rounded-xl p-5">
-            <div class="text-sm text-[#717182] mb-1">Net Worth</div>
+            <div class="text-sm mb-1">Net Worth</div>
             <div class="text-3xl tracking-tight">{format_decimal(@net_worth)}</div>
           </div>
         </div>
@@ -78,7 +78,7 @@ defmodule XactionsWeb.ReportsLive do
         <%!-- Month selector --%>
         <form phx-submit="select_month" data-form="month-select" class="flex items-end gap-3 mb-6">
           <div>
-            <label class="block text-xs text-[#717182] mb-1">Month</label>
+            <label class="block text-xs mb-1">Month</label>
             <input
               type="month"
               name="month"
@@ -88,14 +88,14 @@ defmodule XactionsWeb.ReportsLive do
           </div>
           <button
             type="submit"
-            class="px-4 py-2 hover:bg-[#ececea] rounded-lg text-sm text-[#717182] hover:text-[#030213] transition-colors"
+            class="px-4 py-2 hover:bg-[#ececea] rounded-lg text-sm hover:text-[#030213] transition-colors"
           >
             View
           </button>
         </form>
 
         <div
-          class="text-sm text-[#717182] mb-6"
+          class="text-sm mb-6"
           data-selected-month={@selected_month_str}
         >
           Showing: {Calendar.strftime(@selected_month, "%B %Y")}
@@ -104,16 +104,16 @@ defmodule XactionsWeb.ReportsLive do
         <%!-- Spending by Envelope --%>
         <h2 class="text-base font-medium text-[#030213] mb-3">Spending by Envelope</h2>
         <%= if @spending_by_envelope == [] do %>
-          <p class="text-[#717182] mb-6">No envelope data for this month.</p>
+          <p class="mb-6">No envelope data for this month.</p>
         <% else %>
           <div class="bg-white border border-black/[.08] rounded-xl overflow-hidden mb-6">
             <table class="w-full text-sm">
               <thead>
                 <tr class="border-b border-black/[.06]">
-                  <th class="px-5 py-3 text-left text-xs font-medium text-[#717182] uppercase tracking-wider">
+                  <th class="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider">
                     Envelope
                   </th>
-                  <th class="px-5 py-3 text-right text-xs font-medium text-[#717182] uppercase tracking-wider">
+                  <th class="px-5 py-3 text-right text-xs font-medium uppercase tracking-wider">
                     Spent
                   </th>
                 </tr>
@@ -135,22 +135,22 @@ defmodule XactionsWeb.ReportsLive do
         <%!-- Month-over-Month --%>
         <h2 class="text-base font-medium text-[#030213] mb-3">Month-over-Month</h2>
         <%= if @mom_comparison == [] do %>
-          <p class="text-[#717182] mb-6">No comparison data available.</p>
+          <p class="mb-6">No comparison data available.</p>
         <% else %>
           <div class="bg-white border border-black/[.08] rounded-xl overflow-hidden mb-6">
             <table class="w-full text-sm">
               <thead>
                 <tr class="border-b border-black/[.06]">
-                  <th class="px-5 py-3 text-left text-xs font-medium text-[#717182] uppercase tracking-wider">
+                  <th class="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider">
                     Envelope
                   </th>
-                  <th class="px-5 py-3 text-right text-xs font-medium text-[#717182] uppercase tracking-wider">
+                  <th class="px-5 py-3 text-right text-xs font-medium uppercase tracking-wider">
                     This Month
                   </th>
-                  <th class="px-5 py-3 text-right text-xs font-medium text-[#717182] uppercase tracking-wider">
+                  <th class="px-5 py-3 text-right text-xs font-medium uppercase tracking-wider">
                     Last Month
                   </th>
-                  <th class="px-5 py-3 text-right text-xs font-medium text-[#717182] uppercase tracking-wider">
+                  <th class="px-5 py-3 text-right text-xs font-medium uppercase tracking-wider">
                     Change
                   </th>
                 </tr>
@@ -181,10 +181,10 @@ defmodule XactionsWeb.ReportsLive do
           <table class="w-full text-sm">
             <thead>
               <tr class="border-b border-black/[.06]">
-                <th class="px-5 py-3 text-left text-xs font-medium text-[#717182] uppercase tracking-wider">
+                <th class="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider">
                   Month
                 </th>
-                <th class="px-5 py-3 text-right text-xs font-medium text-[#717182] uppercase tracking-wider">
+                <th class="px-5 py-3 text-right text-xs font-medium uppercase tracking-wider">
                   Net Worth
                 </th>
               </tr>

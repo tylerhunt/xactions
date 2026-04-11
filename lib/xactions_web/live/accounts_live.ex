@@ -153,7 +153,7 @@ defmodule XactionsWeb.AccountsLive do
                 </button>
                 <button
                   type="button"
-                  class="px-4 py-2 hover:bg-[#ececea] rounded-lg text-sm text-[#717182] hover:text-[#030213] transition-colors"
+                  class="px-4 py-2 hover:bg-[#ececea] rounded-lg text-sm hover:text-[#030213] transition-colors"
                   phx-click="cancel_form"
                 >
                   Cancel
@@ -179,7 +179,7 @@ defmodule XactionsWeb.AccountsLive do
                   <div class="flex gap-1">
                     <%= unless institution.is_manual_only do %>
                       <button
-                        class="px-2 py-1 hover:bg-[#ececea] rounded text-xs text-[#717182] hover:text-[#030213] transition-colors"
+                        class="px-2 py-1 hover:bg-[#ececea] rounded text-xs hover:text-[#030213] transition-colors"
                         phx-click="sync_now"
                         phx-value-id={institution.id}
                       >

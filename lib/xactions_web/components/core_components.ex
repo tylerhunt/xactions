@@ -83,7 +83,7 @@ defmodule XactionsWeb.CoreComponents do
           class="group self-start cursor-pointer shrink-0"
           aria-label={gettext("close")}
         >
-          <.icon name="hero-x-mark" class="size-4 text-[#717182] group-hover:text-[#030213]" />
+          <.icon name="hero-x-mark" class="size-4 group-hover:text-[#030213]" />
         </button>
       </div>
     </div>
@@ -249,7 +249,7 @@ defmodule XactionsWeb.CoreComponents do
   def input(%{type: "select"} = assigns) do
     ~H"""
     <div class="mb-3">
-      <label :if={@label} for={@id} class="block text-xs text-[#717182] mb-1">{@label}</label>
+      <label :if={@label} for={@id} class="block text-xs mb-1">{@label}</label>
       <select
         id={@id}
         name={@name}
@@ -271,7 +271,7 @@ defmodule XactionsWeb.CoreComponents do
   def input(%{type: "textarea"} = assigns) do
     ~H"""
     <div class="mb-3">
-      <label :if={@label} for={@id} class="block text-xs text-[#717182] mb-1">{@label}</label>
+      <label :if={@label} for={@id} class="block text-xs mb-1">{@label}</label>
       <textarea
         id={@id}
         name={@name}
@@ -290,7 +290,7 @@ defmodule XactionsWeb.CoreComponents do
   def input(assigns) do
     ~H"""
     <div class="mb-3">
-      <label :if={@label} for={@id} class="block text-xs text-[#717182] mb-1">{@label}</label>
+      <label :if={@label} for={@id} class="block text-xs mb-1">{@label}</label>
       <input
         type={@type}
         name={@name}
@@ -331,7 +331,7 @@ defmodule XactionsWeb.CoreComponents do
         <h1 class="text-lg font-semibold leading-8">
           {render_slot(@inner_block)}
         </h1>
-        <p :if={@subtitle != []} class="text-sm text-[#717182]">
+        <p :if={@subtitle != []} class="text-sm">
           {render_slot(@subtitle)}
         </p>
       </div>
